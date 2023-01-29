@@ -26,7 +26,7 @@ class UserManager(BaseUserManager):
 
 
 class User(AbstractBaseUser):
-    phone = models.CharField(max_length=20, primary_key=True)
+    phone = models.CharField(max_length=20, unique=True)
     name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50, blank=True)
     is_active = models.BooleanField(default=False)
@@ -71,19 +71,7 @@ class User(AbstractBaseUser):
                         settings.TWILIO_AUTH_TOKEN)
 
         # client.messages.create(body=message,from_=settings.TWILIO_NUMBER,to=self.phone)
-        print('DDDOOOOOOOOOOOOOOOOOOOOONEEEEEEEEEEE')
                             #    from_=settings.TWILIO_NUMBER,
                                
                             #    to=self.phone)
         
-    # def send_activation_mail(self):
-    #     message = f"""
-    #     Здравствуйте! Спасибо за регистрацию на нашем сайте!
-    #     Ваш код активации: {self.activation_code}
-    #     """
-    #     send_mail(
-    #         "Подтверждение аккаунта",
-    #         message,
-    #         "test@gmail.com",
-    #         [self.phone]
-    #     )

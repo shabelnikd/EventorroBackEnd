@@ -23,3 +23,5 @@ class ActivationView(APIView):
 
 class LoginView(TokenObtainPairView):
     serializer_class = LoginSerializer
+
+
