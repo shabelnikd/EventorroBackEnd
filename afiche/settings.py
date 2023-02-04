@@ -147,7 +147,7 @@ REST_FRAMEWORK = {
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
 # CORS_ORIGIN_ALLOW_ALL = True
-CORS_ALLOW_ORIGINS = [
+CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',
     'http://localhost:3001', 
     'http://127.0.0.1:3000',
