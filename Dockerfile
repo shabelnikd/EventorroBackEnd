@@ -16,6 +16,16 @@ RUN pip install wheel
 RUN pip install gunicorn 
 RUN pip install -r req.txt 
 
+ENV SECRET_KEY=5eq_4246+3=@tv6^t948z&rs^pi$ctx!kn1k@h2w%!ap#90$54
+ENV DEBUG=True
+ENV ALLOWED_HOSTS='0.0.0.0 afiche-production.up.railway.app'
+ENV EMAIL_BACKEND=django.core.mail.backends.smtp.EmailBackend
+ENV EMAIL_HOST=smtp.gmail.com
+ENV EMAIL_USE_TLS=True
+ENV EMAIL_PORT=587
+ENV EMAIL_HOST_USER=akimbaeva.a23@gmail.com
+ENV EMAIL_HOST_PASSWORD=qolwlivzougccfut
+ENV DB_ENGINE=django.db.backends.postgresql
 ENV DB_NAME=railway 
 ENV DB_USER=postgres 
 ENV DB_PASSWORD=QoMm7OGDulnEJNDtT2EV 
