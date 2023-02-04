@@ -36,4 +36,4 @@ ENV SECRET_KEY=d1d^r$u47ib(!w)-n_09ggzi_9yy-3)+r)s+tmxvufy18hdehl
 RUN python3 manage.py migrate 
 RUN python3 manage.py collectstatic 
 
-CMD gunicorn --bind 0.0.0.0:8000 config.wsgi:application
+CMD gunicorn --bind 0.0.0.0:8000 afiche.wsgi:application
