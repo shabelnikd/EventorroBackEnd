@@ -18,7 +18,7 @@ RUN pip install -r req.txt
 
 ENV SECRET_KEY=5eq_4246+3=@tv6^t948z&rs^pi$ctx!kn1k@h2w%!ap#90$54
 ENV DEBUG=True
-ENV ALLOWED_HOSTS='0.0.0.0,afiche-production.up.railway.app'
+ENV ALLOWED_HOSTS='afiche-production.up.railway.app,0.0.0.0'
 ENV EMAIL_BACKEND=django.core.mail.backends.smtp.EmailBackend
 ENV EMAIL_HOST=smtp.gmail.com
 ENV EMAIL_USE_TLS=True
