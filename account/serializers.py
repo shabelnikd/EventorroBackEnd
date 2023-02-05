@@ -35,6 +35,8 @@ class RegisterSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         user = User.objects.create_user(**validated_data)
+        user.create_activation_code()
+        User.send_activation_mail(user.email, user.activation_code)
         return user
 
 
@@ -58,24 +60,24 @@ class ActivationSerializer(serializers.Serializer):
         user.save()
 
 
-class LoginSerializer(serializers.Serializer):
-    email = serializers.EmailField(required=True)
-    password = serializers.CharField(required=True)
+# class LoginSerializer(serializers.Serializer):
+#     email = serializers.EmailField(required=True)
+#     password = serializers.CharField(required=True)
 
-    def validate(self, attrs):
-        email = attrs.get('email')
-        password = attrs.get('password')
+#     def validate(self, attrs):
+#         email = attrs.get('email')
+#         password = attrs.get('password')
 
-        if email and password:
-            user = authenticate(username=email, password=password, request=self.context.get('request'))
-            if not user:
-                raise serializers.ValidationError('Written Username and Password seems to be incorrect')
-            # if not user.check_password(password):
-            #     raise serializers.ValidationError('Written password seems to be incorrect!')
-        else:
-            raise serializers.ValidationError('Email and password are required!')
-        attrs['user'] = user
-        return attrs
+#         if email and password:
+#             user = authenticate(username=email, password=password, request=self.context.get('request'))
+#             if not user:
+#                 raise serializers.ValidationError('Written Username and Password seems to be incorrect')
+#             # if not user.check_password(password):
+#             #     raise serializers.ValidationError('Written password seems to be incorrect!')
+#         else:
+#             raise serializers.ValidationError('Email and password are required!')
+#         attrs['user'] = user
+#         return attrs
 
 
 class ForgotPasswordSerializer(serializers.Serializer):
