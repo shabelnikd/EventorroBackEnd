@@ -1,13 +1,11 @@
-from django.shortcuts import render
 from rest_framework import status
-from rest_framework.authtoken.models import Token
-from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from .serializers import RegisterSerializer, ActivationSerializer, LoginSerializer, ForgotPasswordSerializer, \
-    CreateNewPasswordSerializer, ChangePasswordSerializer
-
+from .serializers import RegisterSerializer, ActivationSerializer, ForgotPasswordSerializer, \
+    CreateNewPasswordSerializer, ChangePasswordSerializer, LoginSerializer
+from rest_framework_simplejwt.views import TokenObtainPairView
+from rest_framework.permissions import AllowAny
 '''
 1. Регистрация 
 2. Активация
@@ -32,18 +30,6 @@ class ActivationView(APIView):
         if serializer.is_valid(raise_exception=True):
             serializer.activate()
             return Response('Your account is successfully activated', status=status.HTTP_200_OK)
-
-
-class LoginView(ObtainAuthToken):
-    serializer_class = LoginSerializer
-
-
-class LogoutView(APIView):
-    permission_classes = [IsAuthenticated]
-
-    def post(self, request):
-        Token.objects.filter(user=request.user).delete()
-        return Response('You are successfully logged out', status=status.HTTP_200_OK)
 
 
 class ResetPasswordView(APIView):
@@ -74,3 +60,8 @@ class ChangePasswordView(APIView):
 
 class UserProfileView(APIView):
     pass
+
+
+class LoginView(TokenObtainPairView):
+    permission_classes = [AllowAny, ]
+    serializer_class = LoginSerializer
