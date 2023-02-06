@@ -60,24 +60,26 @@ class ActivationSerializer(serializers.Serializer):
         user.save()
 
 
-# class LoginSerializer(serializers.Serializer):
-#     email = serializers.EmailField(required=True)
-#     password = serializers.CharField(required=True)
+class LoginSerializer(TokenObtainPairSerializer):
+    email = serializers.EmailField(required=True)
+    password = serializers.CharField(min_length=6, required=True)
 
-#     def validate(self, attrs):
-#         email = attrs.get('email')
-#         password = attrs.get('password')
-
-#         if email and password:
-#             user = authenticate(username=email, password=password, request=self.context.get('request'))
-#             if not user:
-#                 raise serializers.ValidationError('Written Username and Password seems to be incorrect')
-#             # if not user.check_password(password):
-#             #     raise serializers.ValidationError('Written password seems to be incorrect!')
-#         else:
-#             raise serializers.ValidationError('Email and password are required!')
-#         attrs['user'] = user
-#         return attrs
+    def validate_email(self, email):
+        if not User.objects.filter(email=email).exists():
+            raise serializers.ValidationError('Email does not exists')
+        return email
+    
+    def validate(self, attrs):
+        email = attrs.get('email')
+        password = attrs.pop('password')
+        user =  User.objects.get(email=email)
+        if not user.check_password(password):
+            raise serializers.ValidationError('Invalid password')
+        if user and user.is_active:
+            refresh = self.get_token(user)
+            attrs['refresh'] = str(refresh)
+            attrs['access'] = str(refresh.access_token)
+        return attrs
 
 
 class ForgotPasswordSerializer(serializers.Serializer):
@@ -124,51 +126,34 @@ class CreateNewPasswordSerializer(serializers.Serializer):
         user = User.objects.get(activation_code=code)
         user.set_password(password)
         user.save()
-
-
-class ChangePasswordSerializer(serializers.Serializer):
-    old_password = serializers.CharField(required=True)
-    new_pass = serializers.CharField(min_length=6, required=True)
-    new_pass_confirm = serializers.CharField(min_length=6, required=True)
-
-    def validate_old_pass(self, password):
-        request = self.context.get('request')
-        if not request.user.check_password(password):
-            raise serializers.ValidationError('Password is not correct')
-        return password
-
-    def validate_new_pass(self, attrs):
-        pass_ = self.validated_data.get('new_pass')
-        pass_confirm = self.validated_data.get('new_pass_confirm')
-        if pass_ != pass_confirm:
-            raise serializers.ValidationError('Wrong confirmation of new password')
-        return attrs
-
-    def set_new_password(self):
-        request = self.context.get('request')
-        new_pass = self.validated_data.get('new_pass')
-        user = request.user
-        user.set_password(new_pass)
-        user.save()
-
     
-class LoginSerializer(TokenObtainPairSerializer):
-    email = serializers.EmailField(required=True)
-    password = serializers.CharField(min_length=6, required=True)
 
-    def validate_email(self, email):
-        if not User.objects.filter(email=email).exists():
-            raise serializers.ValidationError('Email does not exists')
-        return email
+class ChangePasswordSerializer(serializers.ModelSerializer):
+    password_confirm = serializers.CharField(min_length=4, required=True)
+
+    class Meta:
+        model = User
+        fields = ('password', 'password_confirm')
     
     def validate(self, attrs):
-        email = attrs.get('email')
-        password = attrs.pop('password')
-        user =  User.objects.get(email=email)
-        if not user.check_password(password):
-            raise serializers.ValidationError('Invalid password')
-        if user and user.is_active:
-            refresh = self.get_token(user)
-            attrs['refresh'] = str(refresh)
-            attrs['access'] = str(refresh.access_token)
+        pass1 = attrs.get("password")
+        pass2 = attrs.pop("password_confirm")
+        if pass1 != pass2:
+            raise serializers.ValidationError("Passwords do not match")
         return attrs
+    
+    def set_new_password(self):
+        user = self.instance
+        user.set_password(self.validated_data['password'])
+        user.save()
+
+
+class UserDetailsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('email', 'name', 'last_name')
+    
+    def to_representation(self, instance):
+        rep = super().to_representation(instance)
+        rep['events_by_user'] = 'working on it'
+        return rep
