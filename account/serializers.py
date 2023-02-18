@@ -1,6 +1,8 @@
 from django.core.mail import send_mail
 from rest_framework import serializers
 from django.contrib.auth import get_user_model, authenticate
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer 
+from django.contrib.auth.hashers import make_password
 
 User = get_user_model()
 
@@ -20,15 +22,19 @@ class RegisterSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("This User is already registered!")
         return email
 
+    
     def validate(self, attrs):
         password = attrs.get('password')
         password_confirm = attrs.pop('password_confirm')
         if password != password_confirm:
             raise serializers.ValidationError('Passwords do not match!')
+        if not attrs['password'].isalnum():
+            raise serializers.ValidationError('Password field must contain'
+                                              'alpha symbols and numbers!')
         return attrs
 
     def create(self, validated_data):
-        user = User.objects.create(**validated_data)
+        user = User.objects.create_user(**validated_data)
         user.create_activation_code()
         User.send_activation_mail(user.email, user.activation_code)
         return user
@@ -41,6 +47,7 @@ class ActivationSerializer(serializers.Serializer):
     def validate(self, attrs):
         email = attrs.get('email')
         activation_code = attrs.get('activation_code')
+        s = User.objects.get(email=email)
         if not User.objects.filter(email=email, activation_code=activation_code).exists():
             raise serializers.ValidationError('User is not found')
         return attrs
@@ -53,24 +60,25 @@ class ActivationSerializer(serializers.Serializer):
         user.save()
 
 
-class LoginSerializer(serializers.Serializer):
+class LoginSerializer(TokenObtainPairSerializer):
     email = serializers.EmailField(required=True)
-    password = serializers.CharField(required=True)
+    password = serializers.CharField(min_length=6, required=True)
 
+    def validate_email(self, email):
+        if not User.objects.filter(email=email).exists():
+            raise serializers.ValidationError('Email does not exists')
+        return email
+    
     def validate(self, attrs):
         email = attrs.get('email')
-        password = attrs.get('password')
-
-        if email and password:
-            user = authenticate(username=email, password=password, request=self.context.get('request'))
-            # user = User.objects.filter(email=email).first()
-            if not user:
-                raise serializers.ValidationError('Written Username and Password seems to be incorrect')
-            # if not user.check_password(password):
-            #     raise serializers.ValidationError('Written password seems to be incorrect!')
-        else:
-            raise serializers.ValidationError('Email and password are required!')
-        attrs['user'] = user
+        password = attrs.pop('password')
+        user =  User.objects.get(email=email)
+        if not user.check_password(password):
+            raise serializers.ValidationError('Invalid password')
+        if user and user.is_active:
+            refresh = self.get_token(user)
+            attrs['refresh'] = str(refresh)
+            attrs['access'] = str(refresh.access_token)
         return attrs
 
 
@@ -118,29 +126,34 @@ class CreateNewPasswordSerializer(serializers.Serializer):
         user = User.objects.get(activation_code=code)
         user.set_password(password)
         user.save()
+    
 
+class ChangePasswordSerializer(serializers.ModelSerializer):
+    password_confirm = serializers.CharField(min_length=4, required=True)
 
-class ChangePasswordSerializer(serializers.Serializer):
-    old_password = serializers.CharField(required=True)
-    new_pass = serializers.CharField(min_length=6, required=True)
-    new_pass_confirm = serializers.CharField(min_length=6, required=True)
-
-    def validate_old_pass(self, password):
-        request = self.context.get('request')
-        if not request.user.check_password(password):
-            raise serializers.ValidationError('Password is not correct')
-        return password
-
-    def validate_new_pass(self, attrs):
-        pass_ = self.validated_data.get('new_pass')
-        pass_confirm = self.validated_data.get('new_pass_confirm')
-        if pass_ != pass_confirm:
-            raise serializers.ValidationError('Wrong confirmation of new password')
+    class Meta:
+        model = User
+        fields = ('password', 'password_confirm')
+    
+    def validate(self, attrs):
+        pass1 = attrs.get("password")
+        pass2 = attrs.pop("password_confirm")
+        if pass1 != pass2:
+            raise serializers.ValidationError("Passwords do not match")
         return attrs
-
+    
     def set_new_password(self):
-        request = self.context.get('request')
-        new_pass = self.validated_data.get('new_pass')
-        user = request.user
-        user.set_password(new_pass)
+        user = self.instance
+        user.set_password(self.validated_data['password'])
         user.save()
+
+
+class UserDetailsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('email', 'name', 'last_name')
+    
+    def to_representation(self, instance):
+        rep = super().to_representation(instance)
+        rep['events_by_user'] = 'working on it'
+        return rep

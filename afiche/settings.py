@@ -25,7 +25,7 @@ SECRET_KEY = config('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', cast=bool)
 
-ALLOWED_HOSTS = config('ALLOWED_HOSTS').split()
+ALLOWED_HOSTS = config('ALLOWED_HOSTS').split(',')
 
 
 # Application definition
@@ -46,7 +46,6 @@ INSTALLED_APPS = [
     'account',
     'category'
 ]
-AUTH_USER_MODEL = 'account.User'
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -128,6 +127,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
+AUTH_USER_MODEL = 'account.User'
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'static'
 
@@ -147,19 +147,22 @@ REST_FRAMEWORK = {
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
 # CORS_ORIGIN_ALLOW_ALL = True
-CORS_ALLOW_ORIGINS = [
+CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',
     'http://localhost:3001', 
     'http://127.0.0.1:3000',
     'http://127.0.0.1:3001', 
     'https://www.thunderclient.com',
+    'https://afiche-production.up.railway.app'
 ]
+
 CORS_ORIGIN_WHITELIST = [
     'http://localhost:3000',
     'http://localhost:3001', 
     'http://127.0.0.1:3000',
     'http://127.0.0.1:3001', 
     'https://www.thunderclient.com',
+    'https://afiche-production.up.railway.app',
 ]
 
 from datetime import timedelta
@@ -194,3 +197,6 @@ EMAIL_USE_TLS = config('EMAIL_USE_TLS', cast=bool)
 EMAIL_PORT = config('EMAIL_PORT', cast=int)
 EMAIL_HOST_USER = config('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
+
+
+CSRF_TRUSTED_ORIGINS=['https://afiche-production.up.railway.app']

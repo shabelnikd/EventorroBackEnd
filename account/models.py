@@ -1,29 +1,31 @@
 from django.contrib.auth.base_user import BaseUserManager, AbstractBaseUser
 from django.core.mail import send_mail
 from django.db import models
-
-from django.core.mail import send_mail
-
+from datetime import datetime, timedelta
+from django.conf import settings
+import jwt
 
 class UserManager(BaseUserManager):
-    def _create(self, email, password, name, last_name, **extra_fields):
+    def _create(self, email, password, **extra_fields):
         if not email:
             raise ValueError('Email cannot be blank')
-        print(extra_fields)
-        user = self.model(email=email, name=name, last_name=last_name, **extra_fields)
+        email = self.normalize_email(email)
+        user = self.model(email=email,**extra_fields)
+        user.create_activation_code()
         user.set_password(password)
-        user.save()
+        user.save(using=self._db)
         return user
 
-    def create_user(self, email, password, name, last_name, **extra_fields):
+    def create_user(self, email, password=None, **extra_fields):
         extra_fields.setdefault('is_active', False)
         extra_fields.setdefault('is_staff', False)
-        return self._create(email, password, name, last_name, **extra_fields)
+        return self._create(email, password, **extra_fields)
 
-    def create_superuser(self, email, password, name, last_name, **extra_fields):
+    def create_superuser(self, email, password, **extra_fields):
         extra_fields.setdefault('is_active', True)
         extra_fields.setdefault('is_staff', True)
-        return self._create(email, password, name, last_name, **extra_fields)
+        extra_fields.setdefault('is_active', True)
+        return self._create(email, password, **extra_fields)
 
 class User(AbstractBaseUser):
     email = models.EmailField(unique=True)
