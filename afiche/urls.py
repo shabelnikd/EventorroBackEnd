@@ -20,6 +20,12 @@ from drf_yasg.views import get_schema_view
 from django.conf.urls.static import static
 from django.conf import settings
 from rest_framework.permissions import AllowAny
+from rest_framework.routers import SimpleRouter
+from event.views import EventViewSet
+
+router = SimpleRouter()
+router.register('events', EventViewSet)
+
 
 schema_view = get_schema_view(
     openapi.Info(
@@ -37,5 +43,6 @@ urlpatterns = [
     path('api/v1/accounts/', include('account.urls')),
     path('api/v1/docs/', schema_view.with_ui('swagger')),
     path('api/v1/categories/', include('category.urls')),
+    path('api/v1/', include(router.urls)),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

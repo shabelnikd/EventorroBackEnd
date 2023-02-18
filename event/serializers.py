@@ -26,7 +26,7 @@ class EventListSerializer(serializers.ModelSerializer):
             repr['side_category3'] = instance.side_category3.name
         repr['hashtag'] = HashTagSerializer(instance.hashtag.values(), many=True).data
         repr['date_time'] = EventDateListSerializer(instance.event_dates, many=True).data
-        return repr 
+        return repr
 
 
 class EventDateSerializer(serializers.ModelSerializer):
