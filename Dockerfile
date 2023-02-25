@@ -28,8 +28,8 @@ ENV EMAIL_HOST_PASSWORD=qolwlivzougccfut
 ENV DB_ENGINE=django.db.backends.postgresql
 ENV DB_NAME=railway 
 ENV DB_USER=postgres 
-ENV DB_PASSWORD=QoMm7OGDulnEJNDtT2EV 
-ENV DB_HOST=containers-us-west-104.railway.app 
+ENV DB_PASSWORD=21PK67ozH97O1OoJ4HfM 
+ENV DB_HOST=containers-us-west-104.railway.app
 ENV DB_PORT=8042
 ENV SECRET_KEY=d1d^r$u47ib(!w)-n_09ggzi_9yy-3)+r)s+tmxvufy18hdehl 
 
