@@ -24,8 +24,10 @@ class EventListSerializer(serializers.ModelSerializer):
             repr['side_category2'] = instance.side_category2.name
         if repr['side_category3']:
             repr['side_category3'] = instance.side_category3.name
-        repr['hashtag'] = HashTagSerializer(instance.hashtag.values(), many=True).data
-        repr['date_time'] = EventDateListSerializer(instance.event_dates, many=True).data
+        repr['hashtag'] = HashTagSerializer(instance.hashtag, many=True).data
+        repr['hashtag'] = instance.hashtag.values_list('name')
+        repr['event_dates'] = EventDateListSerializer(instance.event_dates.exclude(status=True).order_by('date_time'), many=True).data
+        repr['images'] = EventImageSerializer(instance.images, many=True).data
         return repr
 
 
@@ -50,7 +52,7 @@ class EventImageSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = EventImages
-        fields = ('image', 'event')
+        fields = ('image', 'event', 'id')
 
 
 class EventVideoSerializer(serializers.ModelSerializer):
@@ -70,7 +72,6 @@ class EventSerializer(serializers.ModelSerializer):
     class Meta:
         model = Event
         fields = '__all__'
-        # ordering = ['event_dates__date_time']
     
     def create(self, validated_data):
         tags_data = validated_data.pop('hashtag')
@@ -84,9 +85,15 @@ class EventSerializer(serializers.ModelSerializer):
             tag, created = HashTag.objects.get_or_create(**tag_data)
             event.hashtag.add(tag)
         for image in images:
+            image.update({'event_id': event.id})
             img, created = EventImages.objects.get_or_create(**image)
             event.images.add(img)
         for video in videos:
+            video.update({'event_id': event.id})
             vid, created = EventVideos.objects.get_or_create(**video)
             event.videos.add(vid)
         return event
+
+"""
+Write an update function
+"""
