@@ -32,7 +32,7 @@ class Event(models.Model):
 class EventDate(models.Model):
     event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='event_dates')
     date_time = models.DateTimeField()
-
+    status = models.BooleanField(default=False)
 
 class EventImages(models.Model):
     image = models.CharField(max_length=500)
