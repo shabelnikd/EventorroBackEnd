@@ -45,7 +45,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'account',
     'category',
-    'event'
+    'event',
 ]
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -178,7 +178,8 @@ SWAGGER_SETTINGS = {
         'Bearer': {
             'type': 'apiKey',
             'name': 'Authorization',
-            'in': 'header'
+            'in': 'header',
+            'scheme': 'https',
         }
     }
 }

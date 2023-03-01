@@ -94,6 +94,9 @@ class EventSerializer(serializers.ModelSerializer):
             event.videos.add(vid)
         return event
 
+    # def update(self, validated_data):
+
+
 """
 Write an update function
 """
