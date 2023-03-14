@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Event, HashTag, EventDate, EventImages, EventVideos
+from .models import Event, HashTag, EventDate, EventImages
 
 
 class HashTagSerializer(serializers.ModelSerializer):
@@ -55,19 +55,10 @@ class EventImageSerializer(serializers.ModelSerializer):
         fields = ('image', 'event', 'id')
 
 
-class EventVideoSerializer(serializers.ModelSerializer):
-    event = serializers.ReadOnlyField(source='event.id')
-
-    class Meta:
-        model = EventVideos
-        fields = ('video', 'event')
-
-
 class EventSerializer(serializers.ModelSerializer):
     event_dates = EventDateSerializer(many=True)
     hashtag = HashTagSerializer(many=True)
     images = EventImageSerializer(many=True, required=True)
-    videos = EventVideoSerializer(many=True, required=True)
     
     class Meta:
         model = Event
@@ -88,10 +79,6 @@ class EventSerializer(serializers.ModelSerializer):
             image.update({'event_id': event.id})
             img, created = EventImages.objects.get_or_create(**image)
             event.images.add(img)
-        for video in videos:
-            video.update({'event_id': event.id})
-            vid, created = EventVideos.objects.get_or_create(**video)
-            event.videos.add(vid)
         return event
 
     # def update(self, validated_data):
