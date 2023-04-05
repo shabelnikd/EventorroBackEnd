@@ -27,11 +27,11 @@ ENV EMAIL_HOST_USER=akimbaeva.a23@gmail.com
 ENV EMAIL_HOST_PASSWORD=qolwlivzougccfut
 ENV DB_ENGINE=django.db.backends.postgresql
 ENV DB_NAME=railway 
-ENV DB_USER=postgres 
+ENV DB_USER=postgres
 ENV DB_PASSWORD=GPuaar250YuzUPvFgQQd
 ENV DB_HOST=containers-us-west-68.railway.app
 ENV DB_PORT=6093
-ENV SECRET_KEY=d1d^r$u47ib(!w)-n_09ggzi_9yy-3)+r)s+tmxvufy18hdehl 
+ENV SECRET_KEY==zfb6772hh9_#9*5j$!^h0(8df)(-e^l+5--a-p8j-ljyx9axi
 
 RUN python3 manage.py migrate 
 RUN python3 manage.py collectstatic 
