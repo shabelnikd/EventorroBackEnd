@@ -1,9 +1,8 @@
 from django.contrib import admin
-from .models import Event, HashTag, EventImages, EventDate
+from .models import Event, EventImages, EventDate
 # Register your models here.
 
 # admin.site.register(Event)
-admin.site.register(HashTag)
 class EventImagesInLine(admin.StackedInline):
     model = EventImages
     display = ('image')

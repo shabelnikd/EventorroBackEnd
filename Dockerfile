@@ -28,9 +28,9 @@ ENV EMAIL_HOST_PASSWORD=qolwlivzougccfut
 ENV DB_ENGINE=django.db.backends.postgresql
 ENV DB_NAME=railway 
 ENV DB_USER=postgres 
-ENV DB_PASSWORD=nJN3KvUeioa3TVHV9j9h
-ENV DB_HOST=containers-us-west-23.railway.app
-ENV DB_PORT=7067
+ENV DB_PASSWORD=GPuaar250YuzUPvFgQQd
+ENV DB_HOST=containers-us-west-68.railway.app
+ENV DB_PORT=6093
 ENV SECRET_KEY=d1d^r$u47ib(!w)-n_09ggzi_9yy-3)+r)s+tmxvufy18hdehl 
 
 RUN python3 manage.py migrate 

@@ -1,33 +1,26 @@
 from django.db import models
 from category.models import Category
-
-
-class HashTag(models.Model):
-    name = models.CharField(max_length=100)
-
-    def __str__(self) -> str:
-        return self.name
+from account.models import User
 
 
 class Event(models.Model):
     AUDIENCE_CHOICES = (
-        ('1', 'Для мужчин'),
-        ('2', 'Для женщин'),
-        ('3', 'Для всех'),
+        ('1', 'Для всех'),
+        ('2', 'Для детей'),
+        ('3', 'Для женщин'),
+        ('4', 'Для мужчин'),
     )
     AGE = (
-        ('1', '21+'),
-        ('2', '18+'),
-        ('3', '16+'),
-        ('4', 'Без ограничений'),
+        ('1', 'Без ограничений'),
+        ('2', '16+'),
+        ('3', '18+'),
+        ('4', '21+'),
     ) 
-
+    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='events')
     name = models.CharField(max_length=200)
     main_category = models.ForeignKey(Category, on_delete=models.SET_NULL, related_name='main_events', null=True)
     side_category1 = models.ForeignKey(Category,on_delete=models.SET_NULL, related_name='side_events1', blank=True, null=True)
     side_category2 = models.ForeignKey(Category,on_delete=models.SET_NULL, related_name='side_events2', blank=True, null=True)
-    side_category3 = models.ForeignKey(Category,on_delete=models.SET_NULL, related_name='side_events3', blank=True, null=True)
-    hashtag = models.ManyToManyField(HashTag, related_name='events')
     audience = models.CharField(max_length=6, choices=AUDIENCE_CHOICES)
     age_limits = models.CharField(max_length=6, choices=AGE)
     price = models.DecimalField(max_digits=15, decimal_places=2)

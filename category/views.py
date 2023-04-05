@@ -8,7 +8,7 @@ class CategoryListView(ListAPIView):
     queryset = Category.objects.filter(parent=None)
     serializer_class = CategoryListSerializer
 
-class   CategoryDetailView(RetrieveAPIView):
+class CategoryDetailView(RetrieveAPIView):
     queryset = Category.objects.all()
     serializer_class = CategoryListSerializer
     lookup_field = 'slug'

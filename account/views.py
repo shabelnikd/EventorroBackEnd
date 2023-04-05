@@ -22,6 +22,7 @@ from .models import User
 
 
 class RegistrarionView(APIView):
+    @swagger_auto_schema(request_body=RegisterSerializer())
     def post(self, request):
         serializer = RegisterSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
@@ -30,6 +31,7 @@ class RegistrarionView(APIView):
 
 
 class ActivationView(APIView):
+    @swagger_auto_schema(request_body=ActivationSerializer())
     def post(self, request):
         serializer = ActivationSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
@@ -43,6 +45,7 @@ class LoginView(TokenObtainPairView):
 
 
 class ResetPasswordView(APIView):
+    @swagger_auto_schema(request_body=ForgotPasswordSerializer())
     def post(self, request):
         serializer = ForgotPasswordSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
@@ -51,6 +54,7 @@ class ResetPasswordView(APIView):
 
 
 class ResetPasswordCompleteView(APIView):
+    @swagger_auto_schema(request_body=CreateNewPasswordSerializer())
     def post(self, request):
         serializer = CreateNewPasswordSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):

@@ -65,8 +65,17 @@ class LoginSerializer(TokenObtainPairSerializer):
     password = serializers.CharField(min_length=6, required=True)
 
     def validate_email(self, email):
+        print()
+        print()
+        print()
+        print()
+        print()
+        print()
+        print()
+        print()
+
         if not User.objects.filter(email=email).exists():
-            raise serializers.ValidationError('Email does not exists')
+            raise serializers.ValidationError('Email does not exist')
         return email
     
     def validate(self, attrs):
