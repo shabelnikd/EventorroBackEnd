@@ -13,8 +13,6 @@ from rest_framework import status, mixins
 
 
 class EventViewSet(mixins.RetrieveModelMixin,
-                   mixins.UpdateModelMixin,
-                   mixins.DestroyModelMixin,
                    mixins.ListModelMixin,
                    GenericViewSet):
     queryset = Event.objects.all().order_by('-event_dates__date_time')
