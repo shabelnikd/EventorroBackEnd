@@ -27,6 +27,7 @@ DEBUG = config('DEBUG', cast=bool)
 
 ALLOWED_HOSTS = config('ALLOWED_HOSTS').split(',')
 
+DOMAIN=config('DOMAIN')
 
 # Application definition
 
@@ -186,7 +187,6 @@ SWAGGER_SETTINGS = {
     }
 }
 
-DOMAIN=config('DOMAIN')
 LOGIN_URL='/api/v1/account/login/'
 LOGOUT_REDIRECT_URL='/api/v1/docs/'
 
