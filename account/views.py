@@ -2,7 +2,7 @@ from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from .serializers import RegisterSerializer, ActivationSerializer, ForgotPasswordSerializer, \
+from .serializers import RegisterSerializer, ForgotPasswordSerializer, \
     CreateNewPasswordSerializer, ChangePasswordSerializer, LoginSerializer, UserDetailsSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework.permissions import AllowAny, IsAuthenticated
@@ -10,7 +10,7 @@ from drf_yasg.utils import swagger_auto_schema
 from .permissions import IsAuthor
 from django.shortcuts import get_object_or_404
 from .models import User
-
+from django.conf import settings
 '''
 1. Регистрация 
 2. Активация
@@ -31,13 +31,13 @@ class RegistrarionView(APIView):
 
 
 class ActivationView(APIView):
-    @swagger_auto_schema(request_body=ActivationSerializer())
-    def post(self, request):
-        serializer = ActivationSerializer(data=request.data)
-        if serializer.is_valid(raise_exception=True):
-            serializer.activate()
-            return Response('Your account is successfully activated', status=status.HTTP_200_OK)
-
+    def get(self, request, activation_code):
+        user = get_object_or_404(User, activation_code=activation_code)
+        user.activation_code = ''
+        user.is_active = True
+        user.save()
+        # return Response({'redirect': f"http://localhost:8000/api/v1/accounts/login/"}, status=302) # for local
+        return Response({'redirect': f"https://{settings.DOMAIN}/api/v1/accounts/login/"}, status=302)
 
 class LoginView(TokenObtainPairView):
     permission_classes = [AllowAny, ]

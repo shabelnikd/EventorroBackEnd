@@ -57,14 +57,28 @@ class User(AbstractBaseUser):
     def has_perm(self, perm, obj=None):
         return self.is_staff
 
-    @staticmethod
-    def send_activation_mail(email, activation_code):
-        message = f"Thank you for registration. Activation code for your account: {activation_code}"
-        send_mail("Account activation",
-                  message,
-                  'afiche@gmail.com',
-                  [email, ]
-                  )
+    # @staticmethod
+    # def send_activation_mail(email, activation_code):
+    #     message = f"Thank you for registration. Activation code for your account: {activation_code}"
+    #     send_mail("Account activation",
+    #               message,
+    #               'afiche@gmail.com',
+    #               [email, ]
+    #               )
+
+    def send_activation_mail(self):
+        activation_url = f'http://localhost:8000/api/v1/accounts/activate/{self.activation_code}'
+        message = f"""
+            You are signed up successfully!
+            Activate your account {activation_url}
+        """
+        send_mail('Activate your account',
+            message,
+            'test@gmail.com',
+            [self.email, ]
+        )
+
+
     @property
     def token(self):
         """

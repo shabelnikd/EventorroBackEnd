@@ -36,28 +36,8 @@ class RegisterSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         user = User.objects.create_user(**validated_data)
         user.create_activation_code()
-        User.send_activation_mail(user.email, user.activation_code)
+        user.send_activation_mail()
         return user
-
-
-class ActivationSerializer(serializers.Serializer):
-    email = serializers.EmailField(required=True)
-    activation_code = serializers.CharField(required=True)
-
-    def validate(self, attrs):
-        email = attrs.get('email')
-        activation_code = attrs.get('activation_code')
-        s = User.objects.get(email=email)
-        if not User.objects.filter(email=email, activation_code=activation_code).exists():
-            raise serializers.ValidationError('User is not found')
-        return attrs
-
-    def activate(self):
-        data = self.validated_data
-        user = User.objects.get(**data)
-        user.is_active = True
-        user.activation_code = ''
-        user.save()
 
 
 class LoginSerializer(TokenObtainPairSerializer):
@@ -65,15 +45,6 @@ class LoginSerializer(TokenObtainPairSerializer):
     password = serializers.CharField(min_length=6, required=True)
 
     def validate_email(self, email):
-        print()
-        print()
-        print()
-        print()
-        print()
-        print()
-        print()
-        print()
-
         if not User.objects.filter(email=email).exists():
             raise serializers.ValidationError('Email does not exist')
         return email
