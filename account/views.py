@@ -37,7 +37,7 @@ class ActivationView(APIView):
         user.is_active = True
         user.save()
         # return Response({'redirect': f"http://localhost:8000/api/v1/accounts/login/"}, status=302) # for local
-        return Response({'redirect': f"https://{settings.DOMAIN}/api/v1/accounts/login/"}, status=302)
+        return Response({'redirect': f"{settings.DOMAIN}/api/v1/accounts/login/"}, status=302)
 
 class LoginView(TokenObtainPairView):
     permission_classes = [AllowAny, ]
