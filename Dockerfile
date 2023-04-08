@@ -31,7 +31,8 @@ ENV DB_USER=postgres
 ENV DB_PASSWORD=GPuaar250YuzUPvFgQQd
 ENV DB_HOST=containers-us-west-68.railway.app
 ENV DB_PORT=6093
-ENV DOMAIN=afiche-production.up.railway.app
+ENV DOMAIN=https://afiche-production.up.railway.app
+ENV LINK=https://afiche-production.up.railway.app/media
 
 RUN python3 manage.py migrate 
 RUN python3 manage.py collectstatic 
