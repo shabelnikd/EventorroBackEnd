@@ -3,7 +3,7 @@ from rest_framework import serializers
 from django.contrib.auth import get_user_model, authenticate
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer 
 from django.contrib.auth.hashers import make_password
-
+from event.serializers import EventListSerializer
 User = get_user_model()
 
 
@@ -59,6 +59,9 @@ class LoginSerializer(TokenObtainPairSerializer):
             refresh = self.get_token(user)
             attrs['refresh'] = str(refresh)
             attrs['access'] = str(refresh.access_token)
+        attrs['is_guest'] = user.is_guest
+        attrs['is_host'] = user.is_host
+        attrs['events'] = EventListSerializer(user.events, many=True).data
         return attrs
 
 
