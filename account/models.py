@@ -67,7 +67,7 @@ class User(AbstractBaseUser):
     #               )
 
     def send_activation_mail(self):
-        activation_url = f'{settings.LINK}api/v1/accounts/activate/{self.activation_code}'
+        activation_url = f'{settings.LINK}/api/v1/accounts/activate/{self.activation_code}'
         message = f"""
             You are signed up successfully!
             Activate your account {activation_url}
