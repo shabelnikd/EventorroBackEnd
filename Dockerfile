@@ -32,7 +32,7 @@ ENV DB_PASSWORD=GPuaar250YuzUPvFgQQd
 ENV DB_HOST=containers-us-west-68.railway.app
 ENV DB_PORT=6093
 ENV SECRET_KEY==zfb6772hh9_#9*5j$!^h0(8df)(-e^l+5--a-p8j-ljyx9axi
-ENV DOMAIN=afiche-production.up.railway.app/
+ENV DOMAIN=afiche-production.up.railway.app
 
 RUN python3 manage.py migrate 
 RUN python3 manage.py collectstatic 
