@@ -19,3 +19,6 @@ class EventAdmin(admin.ModelAdmin):
         EventImagesInLine,
         EventDateInLine,
     ]
+
+
+

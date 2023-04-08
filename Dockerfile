@@ -16,7 +16,7 @@ RUN pip install wheel
 RUN pip install gunicorn 
 RUN pip install -r req.txt 
 
-ENV SECRET_KEY=5eq_4246+3=@tv6^t948z&rs^pi$ctx!kn1k@h2w%!ap#90$54
+ENV SECRET_KEY==zfb6772hh9_#9*5j$!^h0(8df)(-e^l+5--a-p8j-ljyx9axi
 ENV DEBUG=True
 ENV ALLOWED_HOSTS='afiche-production.up.railway.app,0.0.0.0'
 ENV EMAIL_BACKEND=django.core.mail.backends.smtp.EmailBackend
@@ -31,7 +31,6 @@ ENV DB_USER=postgres
 ENV DB_PASSWORD=GPuaar250YuzUPvFgQQd
 ENV DB_HOST=containers-us-west-68.railway.app
 ENV DB_PORT=6093
-ENV SECRET_KEY==zfb6772hh9_#9*5j$!^h0(8df)(-e^l+5--a-p8j-ljyx9axi
 ENV DOMAIN=afiche-production.up.railway.app
 
 RUN python3 manage.py migrate 
