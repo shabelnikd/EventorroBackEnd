@@ -9,6 +9,7 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from .models import Event, EventDate, Category
 from rest_framework import status, mixins
+from drf_yasg.utils import swagger_auto_schema
 
 
 
@@ -26,12 +27,9 @@ class EventViewSet(mixins.RetrieveModelMixin,
         return serializers.EventSerializer
     
     def get_permissions(self):
-        print(self.action)
         if self.action in ['list', 'retrieve']:
             return [AllowAny()]
         if self.action in ['update_event', 'delete_event']:
-            print('this one worked but shit not correct!')
-            print(IsAuthor())
             return [IsAuthor()]
         else:
             return [IsAuthenticated()]
@@ -67,6 +65,7 @@ class EventViewSet(mixins.RetrieveModelMixin,
 
 
     @action(detail=False, methods=['post'])
+    @swagger_auto_schema(request_body=serializers.EventSerializer())
     def create_event(self, request):
         name = request.data.get('name')
         author = request.user.id
@@ -95,20 +94,15 @@ class EventViewSet(mixins.RetrieveModelMixin,
         audience = request.data.get('audience')
 
         event = Event.objects.create(name=name, description=description, price=price, video=video, location=location, location_link=location_link, age_limits=age_limits, main_category=main_category, side_category1=side_category1, side_category2=side_category2, contacts=contacts, audience=audience, author_id=author)
-        
-        # Create EventDate objects 1 type
-        # event = Event.objects.create(name=name)
-        # event_dates = request.data.get('event_dates')
-        # for pair in event_dates:
-        #         event_dates = event.event_dates.create(date_time=datetime.strptime(pair.get('date_time'), '%Y-%m-%dT%H:%M:%S.%fZ'), status=bool(False))
-
-        # Create EventDate objects 2 type
-        if not request.POST.getlist('event_dates'): #[{"date_time": "2020-05"}]
+ 
+        # Create EventDate objects
+        if request.POST.getlist('event_dates'): #[{"date_time": "2020-05"}]
+            event_dates = request.POST.getlist('event_dates')
+            date_times = []
+            for event_date in event_dates:
+                event.event_dates.create(date_time=event_date, status=bool(False))
+        else:
             return Response({"error": "dates are must"}, status=404)
-        event_dates = request.POST.getlist('event_dates')
-        date_times = []
-        for event_date in event_dates:
-            event.event_dates.create(date_time=event_date, status=bool(False))
     
 
         # Create EventImages objects
@@ -122,11 +116,14 @@ class EventViewSet(mixins.RetrieveModelMixin,
 
     @action(detail=True, methods=['put'])
     def update_event(self, request, pk=None):
+        self.check_object_permissions(request, self.get_object())
         try:
             event = self.get_queryset().get(pk=pk)
         except Event.DoesNotExist:
             return Response({'error': 'Event does not exist.'}, status=status.HTTP_404_NOT_FOUND)
 
+        existing_event_dates = list(event.event_dates.all())
+        print(existing_event_dates)
         name = request.data.get('name', event.name)
         description = request.data.get('description', event.description)
         price = request.data.get('price', event.price)
@@ -168,13 +165,13 @@ class EventViewSet(mixins.RetrieveModelMixin,
 
         # Update EventDates objects
         if not request.POST.getlist('event_dates'):
-            return Response({"error": "dates are must"}, status=404)
-        event_dates = request.POST.getlist('event_dates')
+            event_dates = [i.date_time for i in existing_event_dates]
+        else:
+            event_dates = request.POST.getlist('event_dates')
         event.event_dates.all().delete()
-        date_times = []
         for event_date in event_dates:
-            event.event_dates.create(date_time=event_date, status=bool(False))
-        print(date_times)
+            event.event_dates.get_or_create(date_time=event_date, status=bool(False))
+
         # Update EventImages objects
         if request.FILES.getlist('images'):
             event.images.all().delete()
@@ -186,6 +183,7 @@ class EventViewSet(mixins.RetrieveModelMixin,
 
     @action(detail=True, methods=['delete'])
     def delete_event(self, request, pk=None):
+        self.check_object_permissions(request, self.get_object())
         try:
             event = self.get_queryset().get(pk=pk)
         except Event.DoesNotExist:

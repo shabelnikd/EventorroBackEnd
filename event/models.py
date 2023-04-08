@@ -40,6 +40,9 @@ class EventDate(models.Model):
     date_time = models.DateTimeField()
     status = models.BooleanField(default=False)
 
+    def __str__(self) -> str:
+        return f"{self.date_time}"
+
 class EventImages(models.Model):
     image = models.FileField(upload_to='media/')
     event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='images')
