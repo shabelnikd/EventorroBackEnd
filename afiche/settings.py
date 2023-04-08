@@ -28,6 +28,8 @@ DEBUG = config('DEBUG', cast=bool)
 ALLOWED_HOSTS = config('ALLOWED_HOSTS').split(',')
 
 DOMAIN=config('DOMAIN')
+LINK=config('LINK')
+
 
 # Application definition
 
@@ -204,4 +206,3 @@ EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 
 
 CSRF_TRUSTED_ORIGINS=['https://afiche-production.up.railway.app']
-LINK=config('LINK')
