@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from .models import Event, EventDate, EventImages
 from django.conf import settings
+from tickets.serializers import TicketSerializer
 
 link = settings.LINK
 
@@ -30,6 +31,8 @@ class EventListSerializer(serializers.ModelSerializer):
         repr['event_dates'] = EventDateListSerializer(instance.event_dates.exclude(status=True).order_by('date_time'), many=True).data
         repr['images'] = EventImageSerializer(instance.images, many=True).data
         repr['author'] = instance.author.email
+        repr['tickets_count'] = instance.tickets_number
+        repr['ticket_users'] = TicketSerializer(instance.tickets, many=True).data
         return repr
 
 

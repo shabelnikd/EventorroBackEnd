@@ -57,43 +57,25 @@ class User(AbstractBaseUser):
     def has_perm(self, perm, obj=None):
         return self.is_staff
 
-    # @staticmethod
-    # def send_activation_mail(email, activation_code):
-    #     message = f"Thank you for registration. Activation code for your account: {activation_code}"
-    #     send_mail("Account activation",
-    #               message,
-    #               'afiche@gmail.com',
-    #               [email, ]
-    #               )
-
     def send_activation_mail(self):
         activation_url = f'{settings.LINK}/api/v1/accounts/activate/{self.activation_code}'
         message = f"""
-            You are signed up successfully!
-            Activate your account {activation_url}
+            Вы успешно зарегестрировались!
+            Активируйте ваш аккаунт {activation_url}
         """
-        send_mail('Activate your account',
+        send_mail('Активация аккаунта',
             message,
-            'test@gmail.com',
+            'eventorro@gmail.com',
             [self.email, ]
         )
 
 
     @property
     def token(self):
-        """
-        Позволяет получить токен пользователя путем вызова user.token, вместо
-        user._generate_jwt_token(). Декоратор @property выше делает это
-        возможным. token называется "динамическим свойством".
-        """
         return self._generate_jwt_token()
 
 
     def _generate_jwt_token(self):
-        """
-        Генерирует веб-токен JSON, в котором хранится идентификатор этого
-        пользователя, срок действия токена составляет 1 день от создания
-        """
         dt = datetime.now() + timedelta(days=1)
 
         token = jwt.encode({

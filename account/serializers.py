@@ -2,7 +2,7 @@ from django.core.mail import send_mail
 from rest_framework import serializers
 from django.contrib.auth import get_user_model, authenticate
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer 
-from django.contrib.auth.hashers import make_password
+from event.serializers import EventListSerializer
 from event.serializers import EventListSerializer
 User = get_user_model()
 
@@ -138,5 +138,5 @@ class UserDetailsSerializer(serializers.ModelSerializer):
     
     def to_representation(self, instance):
         rep = super().to_representation(instance)
-        rep['events_by_user'] = 'working on it'
+        rep['events_by_user'] = EventListSerializer(instance.events.all(), many=True).data
         return rep

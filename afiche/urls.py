@@ -24,7 +24,7 @@ from rest_framework.routers import SimpleRouter
 from event.views import EventViewSet
 
 router = SimpleRouter()
-router.register('events', EventViewSet)
+router.register('', EventViewSet)
 
 
 schema_view = get_schema_view(
@@ -43,6 +43,7 @@ urlpatterns = [
     path('api/v1/accounts/', include('account.urls')),
     path('api/v1/docs/', schema_view.with_ui('swagger')),
     path('api/v1/categories/', include('category.urls')),
-    path('api/v1/', include(router.urls)),
+    path('api/v1/events/', include(router.urls)),
+    path('api/v1/', include('tickets.urls'))
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

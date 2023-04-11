@@ -10,6 +10,7 @@ from rest_framework.response import Response
 from .models import Event, EventDate, Category
 from rest_framework import status, mixins
 from drf_yasg.utils import swagger_auto_schema
+from drf_yasg import openapi
 
 
 
@@ -33,21 +34,30 @@ class EventViewSet(mixins.RetrieveModelMixin,
             return [IsAuthor()]
         else:
             return [IsAuthenticated()]
-    
+
+    @swagger_auto_schema(
+        manual_parameters=[
+            openapi.Parameter(
+                name='filter_by',
+                in_=openapi.IN_QUERY,
+                type=openapi.TYPE_STRING,
+                required=False,
+                description='Filter by a custom value'
+            )
+        ]
+    )
     def get_queryset(self):
         queryset = Event.objects.all()
         category = self.request.query_params.get('main_category', None)
         side_category1 = self.request.query_params.get('side_category1', None)
         side_category2 = self.request.query_params.get('side_category2', None)
-        side_category3 = self.request.query_params.get('side_category3', None)
-        if category is not None:
+
+        if category:
             queryset = queryset.filter(main_category__name=category)
-        if side_category1 is not None:
+        if side_category1:
             queryset = queryset.filter(side_category1__name=side_category1)
-        if side_category2 is not None:
+        if side_category2:
             queryset = queryset.filter(side_category2__name=side_category2)
-        if side_category3 is not None:
-            queryset = queryset.filter(side_category3__name=side_category3)
         return queryset
 
     def list(self, request, *args, **kwargs):
@@ -56,7 +66,7 @@ class EventViewSet(mixins.RetrieveModelMixin,
             id__in=EventDate.objects.filter(status=False)
             ).first().date_time)
         page = self.paginate_queryset(queryset)
-        if page is not None:
+        if page:
             serializer = self.get_serializer(page, many=True)
             return self.get_paginated_response(serializer.data)
 
@@ -98,7 +108,6 @@ class EventViewSet(mixins.RetrieveModelMixin,
         # Create EventDate objects
         if request.POST.getlist('event_dates'): #[{"date_time": "2020-05"}]
             event_dates = request.POST.getlist('event_dates')
-            date_times = []
             for event_date in event_dates:
                 event.event_dates.create(date_time=event_date, status=bool(False))
         else:

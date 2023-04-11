@@ -4,6 +4,30 @@ from account.models import User
 
 
 class Event(models.Model):
+    PLACES = (
+        ('1', 'Бар'),
+        ('2', 'Ресторан'),
+        ('3', 'Кофейня'),
+        ('4', 'Ночной клуб'),
+        ('5', 'Концертный зал'),
+        ('6', 'Театр'),
+        ('7', 'Музей'),
+        ('8', 'На улице'),
+        ('9', 'Учебное заведение'),
+        ('10', 'Торговый центр'),
+        ('11', 'Кинотеатр' ),
+        ('12', 'Отель'),
+        ('13', 'Коворкинг'),
+        ('14', 'Караоке' ),
+        ('15', 'Кальянная'),
+        ('16', 'Магазин'),
+        ('17', 'Конференц-зал'),
+        ('18', 'Спортивный зал'),
+        ('19', 'Салон красоты'),
+        ('20', 'Спа Центр'),
+        ('21', 'Тойкана')
+        
+    )
     AUDIENCE_CHOICES = (
         ('1', 'Для всех'),
         ('2', 'Для детей'),
@@ -18,7 +42,7 @@ class Event(models.Model):
     ) 
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='events')
     name = models.CharField(max_length=200)
-    main_category = models.ForeignKey(Category, on_delete=models.SET_NULL, related_name='main_events', null=True)
+    main_category = models.ForeignKey(Category, on_delete=models.RESTRICT, null=False, blank=False, related_name='main_events')
     side_category1 = models.ForeignKey(Category,on_delete=models.SET_NULL, related_name='side_events1', blank=True, null=True)
     side_category2 = models.ForeignKey(Category,on_delete=models.SET_NULL, related_name='side_events2', blank=True, null=True)
     audience = models.CharField(max_length=6, choices=AUDIENCE_CHOICES)
@@ -26,7 +50,9 @@ class Event(models.Model):
     price = models.DecimalField(max_digits=15, decimal_places=2)
     video = models.CharField(max_length=200)
     description = models.TextField()
-    location = models.CharField(max_length=200)
+    type_of_location = models.CharField(max_length=200, choices=PLACES)
+    type_of_location2 = models.CharField(max_length=200, choices=PLACES, null=True, blank=True)
+    tickets_number = models.IntegerField(null=True, blank=True)
     location_link = models.CharField(max_length=200)
     contacts = models.CharField(max_length=50)
 
@@ -46,3 +72,5 @@ class EventDate(models.Model):
 class EventImages(models.Model):
     image = models.FileField(upload_to='media/')
     event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='images')
+
+

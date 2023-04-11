@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'account',
     'category',
     'event',
+    'tickets',
 ]
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

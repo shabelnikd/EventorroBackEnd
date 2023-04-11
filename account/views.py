@@ -11,14 +11,6 @@ from .permissions import IsAuthor
 from django.shortcuts import get_object_or_404
 from .models import User
 from django.conf import settings
-'''
-1. Регистрация 
-2. Активация
-3. Логин
-4. Восстановление пароля
-5. Смена пароля
-6. Профиль пользователя
-'''
 
 
 class RegistrarionView(APIView):
@@ -36,7 +28,6 @@ class ActivationView(APIView):
         user.activation_code = ''
         user.is_active = True
         user.save()
-        # return Response({'redirect': f"http://localhost:8000/api/v1/accounts/login/"}, status=302) # for local
         return Response({'redirect': f"{settings.DOMAIN}/api/v1/accounts/login/"}, status=302)
 
 class LoginView(TokenObtainPairView):
