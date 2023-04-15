@@ -32,7 +32,7 @@ schema_view = get_schema_view(
         title='My API',
         default_version='v1',
         description='My ecommerce API',
-        sheme='https',
+        scheme='https',
     ),
     public=True,
     permission_classes=[AllowAny],
