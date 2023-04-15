@@ -11,6 +11,7 @@ from .models import Event, EventDate, Category
 from rest_framework import status, mixins
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
+from django.db.models import Q
 
 
 
@@ -35,31 +36,56 @@ class EventViewSet(mixins.RetrieveModelMixin,
         else:
             return [IsAuthenticated()]
 
-    @swagger_auto_schema(
-        manual_parameters=[
-            openapi.Parameter(
-                name='filter_by',
-                in_=openapi.IN_QUERY,
-                type=openapi.TYPE_STRING,
-                required=False,
-                description='Filter by a custom value'
-            )
-        ]
-    )
+
     def get_queryset(self):
         queryset = Event.objects.all()
-        category = self.request.query_params.get('main_category', None)
-        side_category1 = self.request.query_params.get('side_category1', None)
-        side_category2 = self.request.query_params.get('side_category2', None)
+        category = self.request.query_params.get('main_category')
+        side_category1 = self.request.query_params.get('side_category1')
+        side_category2 = self.request.query_params.get('side_category2')
+        audience = self.request.query_params.get('audience')
+        age_limits = self.request.query_params.get('age_limits')
+        type_of_location = self.request.query_params.get('type_of_location')
+        type_of_location2 = self.request.query_params.get('type_of_location2')
+        price_from = self.request.query_params.get('price_from')
+        price_to = self.request.query_params.get('price_to')
 
+        # Use select_related to optimize related object queries
+        queryset = queryset.select_related('main_category', 'side_category1', 'side_category2')
+
+        # Use Q object to combine multiple filters
+        filters = Q()
         if category:
-            queryset = queryset.filter(main_category__name=category)
+            filters &= Q(main_category__name=category)
         if side_category1:
-            queryset = queryset.filter(side_category1__name=side_category1)
+            filters &= Q(side_category1__name=side_category1)
         if side_category2:
-            queryset = queryset.filter(side_category2__name=side_category2)
-        return queryset
+            filters &= Q(side_category2__name=side_category2)
+        if audience:
+            filters &= Q(audience=audience)
+        if age_limits:
+            filters &= Q(age_limits=age_limits)
+        if type_of_location:
+            filters &= Q(type_of_location=type_of_location)
+        if type_of_location2:
+            filters &= Q(type_of_location2=type_of_location2)
+        if price_from and price_to:
+            filters &= Q(price__range=(price_from, price_to))
 
+        # Apply filters to queryset
+        queryset = queryset.filter(filters)
+        return queryset
+    
+    @swagger_auto_schema(manual_parameters=[
+        openapi.Parameter('main_category', openapi.IN_QUERY, description='Description of main_category', type=openapi.TYPE_STRING),
+        openapi.Parameter('side_category1', openapi.IN_QUERY, description='Description of side_category1', type=openapi.TYPE_STRING),
+        openapi.Parameter('side_category2', openapi.IN_QUERY, description='Description of side_category2', type=openapi.TYPE_STRING),
+        openapi.Parameter('audience', openapi.IN_QUERY, description='Description of audience', type=openapi.TYPE_STRING),
+        openapi.Parameter('age_limits', openapi.IN_QUERY, description='Description of age_limits', type=openapi.TYPE_STRING),
+        openapi.Parameter('type_of_location', openapi.IN_QUERY, description='Description of type_of_location', type=openapi.TYPE_STRING),
+        openapi.Parameter('type_of_location2', openapi.IN_QUERY, description='Description of type_of_location2', type=openapi.TYPE_STRING),
+        openapi.Parameter('price_from' and 'price_to', openapi.IN_QUERY, description='Description of price_from and price_to', type=openapi.TYPE_STRING),
+
+    ])
     def list(self, request, *args, **kwargs):
         queryset = sorted(self.get_queryset(), 
             key=lambda x: x.event_dates.filter(
@@ -72,7 +98,6 @@ class EventViewSet(mixins.RetrieveModelMixin,
 
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
-
 
     @action(detail=False, methods=['post'])
     @swagger_auto_schema(request_body=serializers.EventSerializer())
