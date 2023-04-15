@@ -190,6 +190,7 @@ SWAGGER_SETTINGS = {
     }
 }
 
+SECURE_SSL_REDIRECT = True
 LOGIN_URL='/api/v1/account/login/'
 LOGOUT_REDIRECT_URL='/api/v1/docs/'
 
