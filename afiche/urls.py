@@ -35,6 +35,8 @@ schema_view = get_schema_view(
     ),
     public=True,
     permission_classes=[AllowAny],
+    url='https://afiche-production.up.railway.app/api/v1/docs/',
+    schemes=['https'],
 )
 
 
