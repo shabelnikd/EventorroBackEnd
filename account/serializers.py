@@ -19,7 +19,7 @@ class RegisterSerializer(serializers.ModelSerializer):
 
     def validate_email(self, email):
         if User.objects.filter(email=email).exists():
-            raise serializers.ValidationError("This User is already registered!")
+            raise serializers.ValidationError("Пользователь с этой почтой уже существует!")
         return email
 
     
@@ -27,10 +27,7 @@ class RegisterSerializer(serializers.ModelSerializer):
         password = attrs.get('password')
         password_confirm = attrs.pop('password_confirm')
         if password != password_confirm:
-            raise serializers.ValidationError('Passwords do not match!')
-        if not attrs['password'].isalnum():
-            raise serializers.ValidationError('Password field must contain'
-                                              'alpha symbols and numbers!')
+            raise serializers.ValidationError('Пароли не совпадают!')
         return attrs
 
     def create(self, validated_data):
@@ -46,7 +43,7 @@ class LoginSerializer(TokenObtainPairSerializer):
 
     def validate_email(self, email):
         if not User.objects.filter(email=email).exists():
-            raise serializers.ValidationError('Email does not exist')
+            raise serializers.ValidationError('Такого пользователя нет')
         return email
     
     def validate(self, attrs):
@@ -54,7 +51,9 @@ class LoginSerializer(TokenObtainPairSerializer):
         password = attrs.pop('password')
         user =  User.objects.get(email=email)
         if not user.check_password(password):
-            raise serializers.ValidationError('Invalid password')
+            raise serializers.ValidationError('Неверный пароль')
+        if not user.is_active:
+            raise serializers.ValidationError('Активируйте свою учетную запись через email')
         if user and user.is_active:
             refresh = self.get_token(user)
             attrs['refresh'] = str(refresh)
@@ -70,18 +69,18 @@ class ForgotPasswordSerializer(serializers.Serializer):
 
     def validate_email(self, email):
         if not User.objects.filter(email=email).exists():
-            raise serializers.ValidationError()
+            raise serializers.ValidationError('Такого пользователя не существует')
         return email
 
     def send_reset_email(self):
         email = self.validated_data.get('email')
         user = User.objects.get(email=email)
         user.create_activation_code()
-        message = f"Code for restoring your password {user.activation_code}"
+        message = f"Код для восстановления пароля {user.activation_code}"
         send_mail(
-            'Password restore',
+            'Восстановление пароля',
             message,
-            'test@gmail.com',
+            'eventorro@gmail.com',
             [email]
         )
 
@@ -93,14 +92,14 @@ class CreateNewPasswordSerializer(serializers.Serializer):
 
     def validate_activation_code(self, code):
         if not User.objects.filter(activation_code=code).exists():
-            raise serializers.ValidationError('Activation code seems to be incorrect')
+            raise serializers.ValidationError('Активационный код введен неверно')
         return code
 
     def validate(self, attrs):
         password = attrs.get('password')
         password_confirm = attrs.get('password_confirm')
         if password != password_confirm:
-            raise serializers.ValidationError('Passwords do not match')
+            raise serializers.ValidationError('Пароли не совпадают')
         return attrs
 
     def create_pass(self):
@@ -122,7 +121,7 @@ class ChangePasswordSerializer(serializers.ModelSerializer):
         pass1 = attrs.get("password")
         pass2 = attrs.pop("password_confirm")
         if pass1 != pass2:
-            raise serializers.ValidationError("Passwords do not match")
+            raise serializers.ValidationError("Пароли не совпадают")
         return attrs
     
     def set_new_password(self):

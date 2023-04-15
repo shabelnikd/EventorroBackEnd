@@ -19,7 +19,7 @@ class RegistrarionView(APIView):
         serializer = RegisterSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
             serializer.save()
-            return Response('Your account successfully registered', status=status.HTTP_201_CREATED)
+            return Response('Ваш аккаунт успешно зарегестрирован', status=status.HTTP_201_CREATED)
 
 
 class ActivationView(APIView):
@@ -41,7 +41,7 @@ class ResetPasswordView(APIView):
         serializer = ForgotPasswordSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
             serializer.send_reset_email()
-            return Response('Code for password restore was sent to your email', status=status.HTTP_200_OK)
+            return Response('Код для восстановления пароля был выслан вам на почту', status=status.HTTP_200_OK)
 
 
 class ResetPasswordCompleteView(APIView):
@@ -50,7 +50,7 @@ class ResetPasswordCompleteView(APIView):
         serializer = CreateNewPasswordSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
             serializer.create_pass()
-            return Response('Password was restored successfully', status=status.HTTP_200_OK)
+            return Response('Пароль восстановлен успешно', status=status.HTTP_200_OK)
 
 
 class ChangePasswordView(APIView):

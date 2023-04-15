@@ -132,7 +132,6 @@ class EventViewSet(mixins.RetrieveModelMixin,
             return Response({'error': 'Event does not exist.'}, status=status.HTTP_404_NOT_FOUND)
 
         existing_event_dates = list(event.event_dates.all())
-        print(existing_event_dates)
         name = request.data.get('name', event.name)
         description = request.data.get('description', event.description)
         price = request.data.get('price', event.price)
