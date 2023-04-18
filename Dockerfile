@@ -28,9 +28,9 @@ ENV EMAIL_HOST_PASSWORD=qolwlivzougccfut
 ENV DB_ENGINE=django.db.backends.postgresql
 ENV DB_NAME=railway 
 ENV DB_USER=postgres
-ENV DB_PASSWORD=GPuaar250YuzUPvFgQQd
-ENV DB_HOST=containers-us-west-68.railway.app
-ENV DB_PORT=6093
+ENV DB_PASSWORD=625xGIZaVSM0bAedQNmv
+ENV DB_HOST=containers-us-west-127.railway.app
+ENV DB_PORT=5527
 ENV DOMAIN=https://afiche-production.up.railway.app
 ENV LINK=https://afiche-production.up.railway.app/media
 
