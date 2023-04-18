@@ -12,9 +12,16 @@ class AudienceField(serializers.ChoiceField):
         # Return the label as the representation
         return label
 
+class AgeLimitsField(serializers.ChoiceField):
+    def to_representation(self, value):
+        # Find the label for the given value
+        label = dict(self.choices)[value]
+        # Return the label as the representation
+        return label
 
 class EventListSerializer(serializers.ModelSerializer):
     audience = AudienceField(choices=Event.AUDIENCE_CHOICES)
+    age_limits = AgeLimitsField(choices=Event.AGE)
 
     class Meta:
         model = Event

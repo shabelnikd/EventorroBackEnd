@@ -2,8 +2,9 @@ from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework import generics
 from .serializers import RegisterSerializer, ForgotPasswordSerializer, \
-    CreateNewPasswordSerializer, ChangePasswordSerializer, LoginSerializer, UserDetailsSerializer
+    CreateNewPasswordSerializer, ChangePasswordSerializer, LoginSerializer, ProfileSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from drf_yasg.utils import swagger_auto_schema
@@ -11,6 +12,7 @@ from .permissions import IsAuthor
 from django.shortcuts import get_object_or_404
 from .models import User
 from django.conf import settings
+from .models import Profile
 
 
 class RegistrarionView(APIView):
@@ -64,11 +66,26 @@ class ChangePasswordView(APIView):
         return Response(status=201)
 
 
-class DetailsUserView(APIView):
-    permission_classes = [IsAuthenticated]
+
+
+class ProfileViewSet(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Profile.objects.all()
+    serializer_class = ProfileSerializer
+    permission_classes = [IsAuthor]
+    lookup_field = 'user__email'
+    lookup_url_kwarg = 'user__email'
+
     
-    def get(self, request, email=None):
-        if email is None:
-            email = request.user.email
-        user = get_object_or_404(User, email=email)
-        return Response(UserDetailsSerializer(user).data)
+    def patch(self, request, *args, **kwargs):
+        user_data = ('first_name', 'last_name', 'is_guest', 'is_host')
+        user = User.objects.get(email=kwargs['user__email'])
+        for data in user_data:
+            if data in request.data:
+                setattr(user, data, request.data[data])
+            elif data in request.data.get('user', {}):
+                setattr(user, data, request.data['user'][data])
+        user.save()
+        return super().patch(request, *args, **kwargs)
+
+    def put(self, request, *args, **kwargs):
+        return self.patch(request, *args, **kwargs)

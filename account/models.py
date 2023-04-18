@@ -4,6 +4,7 @@ from django.db import models
 from datetime import datetime, timedelta
 from django.conf import settings
 import jwt
+from django.contrib.auth import get_user_model
 
 class UserManager(BaseUserManager):
     def _create(self, email, password, **extra_fields):
@@ -84,3 +85,17 @@ class User(AbstractBaseUser):
         }, settings.SECRET_KEY, algorithm='HS256')
 
         return token.decode('utf-8')
+
+User = get_user_model()
+
+
+class Profile(models.Model):
+    user = models.OneToOneField(User, related_name='profile', on_delete=models.CASCADE)
+    telegram = models.CharField(max_length=60, null=True)
+    whatsapp = models.CharField(max_length=100, null=True)
+    instagram = models.CharField(max_length=255, null=True)
+    phone_number = models.CharField(max_length=255, null=True)
+    avatar = models.ImageField(upload_to='media/', blank=True)
+
+    def __str__(self) -> str:
+        return f"Profile -> {self.user.email}"

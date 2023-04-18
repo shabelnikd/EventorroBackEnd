@@ -42,6 +42,7 @@ class Event(models.Model):
     ) 
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='events')
     name = models.CharField(max_length=200)
+    poster = models.ImageField(upload_to='media/')
     main_category = models.ForeignKey(Category, on_delete=models.RESTRICT, null=False, blank=False, related_name='main_events')
     side_category1 = models.ForeignKey(Category,on_delete=models.SET_NULL, related_name='side_events1', blank=True, null=True)
     side_category2 = models.ForeignKey(Category,on_delete=models.SET_NULL, related_name='side_events2', blank=True, null=True)

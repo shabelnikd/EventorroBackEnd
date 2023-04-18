@@ -3,7 +3,11 @@ from rest_framework import serializers
 from django.contrib.auth import get_user_model, authenticate
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer 
 from event.serializers import EventListSerializer
-from event.serializers import EventListSerializer
+from .models import Profile
+from django.conf import settings
+
+
+LINK = settings.LINK
 User = get_user_model()
 
 
@@ -34,6 +38,7 @@ class RegisterSerializer(serializers.ModelSerializer):
         user = User.objects.create_user(**validated_data)
         user.create_activation_code()
         user.send_activation_mail()
+        profile = Profile.objects.create(user=user, email=validated_data['email'])
         return user
 
 
@@ -130,12 +135,25 @@ class ChangePasswordSerializer(serializers.ModelSerializer):
         user.save()
 
 
-class UserDetailsSerializer(serializers.ModelSerializer):
+class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
-        model = User
-        fields = ('email', 'name', 'last_name')
+        model = Profile
+        fields = '__all__'
+
     
     def to_representation(self, instance):
         rep = super().to_representation(instance)
-        rep['events_by_user'] = EventListSerializer(instance.events.all(), many=True).data
+        rep['user'] = instance.user.email
+        rep['avatar'] = f"{LINK}/media/{instance.avatar}"
+        print(instance.avatar)
+        if instance.user.is_host == True:
+            rep['events_by_user'] = EventListSerializer(instance.user.events, many=True).data
+        else:
+            try:
+                rep.pop('telegram')
+                rep.pop('whatsapp')
+                rep.pop('instagram')
+                rep.pop('phone_number')
+            except:
+                return rep
         return rep
