@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from .serializers import RegisterSerializer, ForgotPasswordSerializer, \
     CreateNewPasswordSerializer, ChangePasswordSerializer, LoginSerializer,\
-        UserDetailsSerializer, UserGuestDetailsSerializer
+        UserHostDetailsSerializer, UserGuestDetailsSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from drf_yasg.utils import swagger_auto_schema
@@ -74,7 +74,7 @@ class DetailsUserView(APIView):
             email = request.user.email
         user = get_object_or_404(User, email=email)
         if user.is_host:
-            return Response(UserDetailsSerializer(user).data)
+            return Response(UserHostDetailsSerializer(user).data)
         return Response(UserGuestDetailsSerializer(user).data)
 
     def put(self, request, email=None):
@@ -82,7 +82,7 @@ class DetailsUserView(APIView):
             email = request.user.email
         user = get_object_or_404(User, email=email)
         if user.is_host:
-            serializer = UserDetailsSerializer(user, data=request.data, partial=True)
+            serializer = UserHostDetailsSerializer(user, data=request.data, partial=True)
         else:
             serializer = UserGuestDetailsSerializer(user, data=request.data, partial=True)
         if serializer.is_valid():

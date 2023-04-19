@@ -136,7 +136,7 @@ class ChangePasswordSerializer(serializers.ModelSerializer):
         user.save()
 
 
-class UserDetailsSerializer(serializers.ModelSerializer):
+class UserHostDetailsSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('email', 'name', 'last_name', 'is_host', 'is_guest', 'telegram', 'whatsapp', 'phone', 'avatar')
