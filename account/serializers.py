@@ -1,9 +1,8 @@
 from django.core.mail import send_mail
 from rest_framework import serializers
-from django.contrib.auth import get_user_model, authenticate
+from django.contrib.auth import get_user_model
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer 
 from event.serializers import EventListSerializer
-from .models import Profile
 from django.conf import settings
 
 
@@ -38,7 +37,6 @@ class RegisterSerializer(serializers.ModelSerializer):
         user = User.objects.create_user(**validated_data)
         user.create_activation_code()
         user.send_activation_mail()
-        profile = Profile.objects.create(user=user)
         return user
 
 
@@ -138,38 +136,22 @@ class ChangePasswordSerializer(serializers.ModelSerializer):
         user.save()
 
 
-class ProfileSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Profile
-        fields = '__all__'
-
-    
-    def to_representation(self, instance):
-        rep = super().to_representation(instance)
-        rep['user'] = instance.user.email
-        rep['avatar'] = f"{LINK}/media/{instance.avatar}"
-        rep['is_guest'] = instance.user.is_guest
-        rep['is_host'] = instance.user.is_host
-        print(instance.avatar)
-        if instance.user.is_host == True:
-            rep['events_by_user'] = EventListSerializer(instance.user.events, many=True).data
-        else:
-            try:
-                rep.pop('telegram')
-                rep.pop('whatsapp')
-                rep.pop('instagram')
-                rep.pop('phone_number')
-            except:
-                return rep
-        return rep
-
 class UserDetailsSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('email', 'name', 'last_name', 'is_host', 'is_guest')
+        fields = ('email', 'name', 'last_name', 'is_host', 'is_guest', 'telegram', 'whatsapp', 'phone', 'avatar')
 
     def to_representation(self, instance):
         rep = super().to_representation(instance)
-        if instance.is_host:
-            rep['events_by_user'] = EventListSerializer(instance.events.all(), many=True).data
+        rep['events_by_user'] = EventListSerializer(instance.events.all(), many=True).data
+        rep['telegram'] = instance.telegram
+        rep['phone'] = instance.phone
+        rep['whatsapp'] = instance.whatsapp
+        rep['avatar'] = f"{LINK}/media/{instance.avatar}"
         return rep
+
+
+class UserGuestDetailsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('email', 'name', 'last_name', 'is_host', 'is_guest')
