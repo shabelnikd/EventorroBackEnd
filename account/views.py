@@ -73,7 +73,9 @@ class DetailsUserView(APIView):
         if email is None:
             email = request.user.email
         user = get_object_or_404(User, email=email)
-        return Response(UserDetailsSerializer(user).data)
+        if user.is_host:
+            return Response(UserDetailsSerializer(user).data)
+        return Response(UserGuestDetailsSerializer(user).data)
 
     def put(self, request, email=None):
         if email is None:
