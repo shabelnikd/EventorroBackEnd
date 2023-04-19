@@ -65,7 +65,10 @@ class LoginSerializer(TokenObtainPairSerializer):
             attrs['access'] = str(refresh.access_token)
         attrs['is_guest'] = user.is_guest
         attrs['is_host'] = user.is_host
-        attrs['events'] = EventListSerializer(user.events, many=True).data
+        attrs['last_name'] = user.last_name
+        attrs['name'] = user.name
+        if user.is_host:
+            attrs['events'] = EventListSerializer(user.events, many=True).data
         return attrs
 
 
