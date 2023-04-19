@@ -145,6 +145,8 @@ class ProfileSerializer(serializers.ModelSerializer):
         rep = super().to_representation(instance)
         rep['user'] = instance.user.email
         rep['avatar'] = f"{LINK}/media/{instance.avatar}"
+        rep['is_guest'] = instance.user.is_guest
+        rep['is_host'] = instance.user.is_host
         print(instance.avatar)
         if instance.user.is_host == True:
             rep['events_by_user'] = EventListSerializer(instance.user.events, many=True).data
