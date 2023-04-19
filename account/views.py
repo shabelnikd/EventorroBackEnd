@@ -2,9 +2,9 @@ from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework import generics
 from .serializers import RegisterSerializer, ForgotPasswordSerializer, \
-    CreateNewPasswordSerializer, ChangePasswordSerializer, LoginSerializer, UserDetailsSerializer
+    CreateNewPasswordSerializer, ChangePasswordSerializer, LoginSerializer,\
+        UserDetailsSerializer, UserGuestDetailsSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from drf_yasg.utils import swagger_auto_schema
@@ -12,10 +12,9 @@ from .permissions import IsAuthor
 from django.shortcuts import get_object_or_404
 from .models import User
 from django.conf import settings
-from .models import Profile
 
 
-class RegistrarionView(APIView):
+class RegistrationView(APIView):
     @swagger_auto_schema(request_body=RegisterSerializer())
     def post(self, request):
         serializer = RegisterSerializer(data=request.data)
@@ -80,33 +79,12 @@ class DetailsUserView(APIView):
         if email is None:
             email = request.user.email
         user = get_object_or_404(User, email=email)
-        serializer = UserDetailsSerializer(user, data=request.data, partial=True)
+        if user.is_host:
+            serializer = UserDetailsSerializer(user, data=request.data, partial=True)
+        else:
+            serializer = UserGuestDetailsSerializer(user, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-
-# class ProfileViewSet(generics.RetrieveUpdateDestroyAPIView):
-#     queryset = Profile.objects.all()
-#     serializer_class = ProfileSerializer
-#     permission_classes = [IsAuthor]
-#     lookup_field = 'user__email'
-#     lookup_url_kwarg = 'user__email'
-
-    
-#     def patch(self, request, *args, **kwargs):
-#         user_data = ('first_name', 'last_name', 'is_guest', 'is_host')
-#         user = User.objects.get(email=kwargs['user__email'])
-#         for data in user_data:
-#             if data in request.data:
-#                 setattr(user, data, request.data[data])
-#             elif data in request.data.get('user', {}):
-#                 setattr(user, data, request.data['user'][data])
-#         user.save()
-#         return super().patch(request, *args, **kwargs)
-
-#     def put(self, request, *args, **kwargs):
-#         return self.patch(request, *args, **kwargs)
