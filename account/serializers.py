@@ -159,3 +159,14 @@ class ProfileSerializer(serializers.ModelSerializer):
             except:
                 return rep
         return rep
+
+class UserDetailsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('email', 'name', 'last_name', 'is_host', 'is_guest')
+
+    def to_representation(self, instance):
+        rep = super().to_representation(instance)
+        if instance.is_host:
+            rep['events_by_user'] = EventListSerializer(instance.events.all(), many=True).data
+        return rep
