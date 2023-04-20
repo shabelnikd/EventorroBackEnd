@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from .models import Event, EventDate, EventImages
+from category.models import Category
 from django.conf import settings
 from tickets.serializers import TicketSerializer
 
@@ -25,12 +26,7 @@ class EventListSerializer(serializers.ModelSerializer):
     
     def to_representation(self, instance):
         repr = super().to_representation(instance)
-        if repr['main_category']:
-            repr['main_category'] = instance.main_category.name
-        if repr['side_category1']:
-            repr['side_category1'] = instance.side_category1.name
-        if repr['side_category2']:
-            repr['side_category2'] = instance.side_category2.name
+        repr['categories'] = EventCategorySerializer(instance.categories, many=True).data
         repr['event_dates'] = EventDateListSerializer(instance.event_dates.exclude(status=True).order_by('date_time'), many=True).data
         repr['images'] = EventImageSerializer(instance.images, many=True).data
         repr['author'] = instance.author.email
@@ -68,12 +64,19 @@ class EventImageSerializer(serializers.ModelSerializer):
         repr['image'] = f"{link}/media/{instance.image}"
         return repr
 
+class EventCategorySerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Category
+        fields = ('name', )
 
 class EventSerializer(serializers.ModelSerializer):
     event_dates = EventDateSerializer(many=True, required=True)
     images = EventImageSerializer(many=True, required=True)
+    categories = EventCategorySerializer(many=True, required=True)
     
     class Meta:
         model = Event
         fields = '__all__'
+    
     

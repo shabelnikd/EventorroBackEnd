@@ -7,7 +7,7 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from .permissions import IsAuthor
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from .models import Event, EventDate, Category
+from .models import Event, EventDate
 from rest_framework import status, mixins
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
@@ -39,9 +39,7 @@ class EventViewSet(mixins.RetrieveModelMixin,
 
     def get_queryset(self):
         queryset = Event.objects.all()
-        category = self.request.query_params.get('main_category')
-        side_category1 = self.request.query_params.get('side_category1')
-        side_category2 = self.request.query_params.get('side_category2')
+        # category = self.request.query_params.get('main_category')
         audience = self.request.query_params.get('audience')
         age_limits = self.request.query_params.get('age_limits')
         type_of_location = self.request.query_params.get('type_of_location')
@@ -50,16 +48,16 @@ class EventViewSet(mixins.RetrieveModelMixin,
         price_to = self.request.query_params.get('price_to')
 
         # Use select_related to optimize related object queries
-        queryset = queryset.select_related('main_category', 'side_category1', 'side_category2')
+        queryset = queryset.select_related('author')
 
         # Use Q object to combine multiple filters
         filters = Q()
-        if category:
-            filters &= Q(main_category__name=category)
-        if side_category1:
-            filters &= Q(side_category1__name=side_category1)
-        if side_category2:
-            filters &= Q(side_category2__name=side_category2)
+        # if category:
+        #     filters &= Q(main_category__name=category)
+        # if side_category1:
+        #     filters &= Q(side_category1__name=side_category1)
+        # if side_category2:
+        #     filters &= Q(side_category2__name=side_category2)
         if audience:
             filters &= Q(audience=audience)
         if age_limits:
@@ -76,9 +74,6 @@ class EventViewSet(mixins.RetrieveModelMixin,
         return queryset
     
     @swagger_auto_schema(manual_parameters=[
-        openapi.Parameter('main_category', openapi.IN_QUERY, description='Description of main_category', type=openapi.TYPE_STRING),
-        openapi.Parameter('side_category1', openapi.IN_QUERY, description='Description of side_category1', type=openapi.TYPE_STRING),
-        openapi.Parameter('side_category2', openapi.IN_QUERY, description='Description of side_category2', type=openapi.TYPE_STRING),
         openapi.Parameter('audience', openapi.IN_QUERY, description='Description of audience', type=openapi.TYPE_STRING),
         openapi.Parameter('age_limits', openapi.IN_QUERY, description='Description of age_limits', type=openapi.TYPE_STRING),
         openapi.Parameter('type_of_location', openapi.IN_QUERY, description='Description of type_of_location', type=openapi.TYPE_STRING),
@@ -107,29 +102,19 @@ class EventViewSet(mixins.RetrieveModelMixin,
         description = request.data.get('description')
         price = request.data.get('price')
         video = request.data.get('video')
-        location = request.data.get('location')
+        # location = request.data.get('location')
         location_link = request.data.get('location_link')
         age_limits = request.data.get('age_limits')
-        category_id = request.data.get('main_category')
-        side_category1_id = request.data.get('side_category1')
-        side_category2_id = request.data.get('side_category2')
-        try:
-            main_category = Category.objects.get(id=category_id)
-        except:
-            main_category = None
-        try:
-            side_category1 = Category.objects.get(id=side_category1_id)
-        except:
-            side_category1 = None
-        try:
-            side_category2 = Category.objects.get(id=side_category2_id)
-        except:
-            side_category2 = None
-        contacts = request.data.get('contacts')
         audience = request.data.get('audience')
 
-        event = Event.objects.create(name=name, description=description, price=price, video=video, location=location, location_link=location_link, age_limits=age_limits, main_category=main_category, side_category1=side_category1, side_category2=side_category2, contacts=contacts, audience=audience, author_id=author)
- 
+        event = Event.objects.create(name=name, description=description, price=price, video=video, location_link=location_link, age_limits=age_limits,  audience=audience, author_id=author)
+
+        if request.POST.getlist('categories'):
+            categories = request.POST.getlist('categories')
+            print(categories)
+            for cat in categories:
+                event.categories.add(cat)
+
         # Create EventDate objects
         if request.POST.getlist('event_dates'): #[{"date_time": "2020-05"}]
             event_dates = request.POST.getlist('event_dates')
@@ -138,7 +123,6 @@ class EventViewSet(mixins.RetrieveModelMixin,
         else:
             return Response({"error": "dates are must"}, status=404)
     
-
         # Create EventImages objects
         for index, file in enumerate(request.FILES.getlist('images')):
             event_images = event.images.create(
@@ -147,6 +131,7 @@ class EventViewSet(mixins.RetrieveModelMixin,
 
         serializer = self.get_serializer(event)
         return Response(serializer.data)
+        
 
     @action(detail=True, methods=['put'])
     def update_event(self, request, pk=None):
@@ -165,20 +150,6 @@ class EventViewSet(mixins.RetrieveModelMixin,
         location_link = request.data.get('location_link', event.location_link)
         age_limits = request.data.get('age_limits', event.age_limits)
         category_id = request.data.get('main_category', event.main_category.id if event.main_category else None)
-        side_category1_id = request.data.get('side_category1', event.side_category1.id if event.side_category1 else None)
-        side_category2_id = request.data.get('side_category2', event.side_category2.id if event.side_category2 else None)
-        try:
-            main_category = Category.objects.get(id=category_id)
-        except:
-            main_category = None
-        try:
-            side_category1 = Category.objects.get(id=side_category1_id)
-        except:
-            side_category1 = None
-        try:
-            side_category2 = Category.objects.get(id=side_category2_id)
-        except:
-            side_category2 = None
         contacts = request.data.get('contacts', event.contacts)
         audience = request.data.get('audience', event.audience)
 
@@ -189,9 +160,6 @@ class EventViewSet(mixins.RetrieveModelMixin,
         event.location = location
         event.location_link = location_link
         event.age_limits = age_limits
-        event.main_category = main_category
-        event.side_category1 = side_category1
-        event.side_category2 = side_category2
         event.contacts = contacts
         event.audience = audience
         event.save()
