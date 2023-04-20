@@ -147,8 +147,14 @@ class UserHostDetailsSerializer(serializers.ModelSerializer):
         rep['telegram'] = instance.telegram
         rep['phone'] = instance.phone
         rep['whatsapp'] = instance.whatsapp
-        rep['avatar'] = f"{LINK}/media/{instance.avatar}"
-        rep['poster'] = f"{LINK}/media/{instance.poster}"
+        if instance.avatar:
+            rep['avatar'] = f"{LINK}/media/{instance.avatar}"
+        else:
+            rep['avatar'] = ""
+        if instance.poster:
+            rep['poster'] = f"{LINK}/media/{instance.poster}"
+        else:
+            rep['poster'] = ""
         rep['bio'] = instance.bio
 
         return rep
