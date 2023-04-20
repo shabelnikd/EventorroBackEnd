@@ -39,7 +39,6 @@ class EventViewSet(mixins.RetrieveModelMixin,
 
     def get_queryset(self):
         queryset = Event.objects.all()
-        # category = self.request.query_params.get('main_category')
         audience = self.request.query_params.get('audience')
         age_limits = self.request.query_params.get('age_limits')
         type_of_location = self.request.query_params.get('type_of_location')
@@ -52,12 +51,9 @@ class EventViewSet(mixins.RetrieveModelMixin,
 
         # Use Q object to combine multiple filters
         filters = Q()
-        # if category:
-        #     filters &= Q(main_category__name=category)
-        # if side_category1:
-        #     filters &= Q(side_category1__name=side_category1)
-        # if side_category2:
-        #     filters &= Q(side_category2__name=side_category2)
+        category_ids = self.request.query_params.getlist('category', [])
+        if category_ids:
+            filters &= Q(categories__id__in=category_ids)
         if audience:
             filters &= Q(audience=audience)
         if age_limits:
@@ -74,6 +70,7 @@ class EventViewSet(mixins.RetrieveModelMixin,
         return queryset
     
     @swagger_auto_schema(manual_parameters=[
+        openapi.Parameter('category', openapi.IN_QUERY, description='Description of audience', type=openapi.TYPE_STRING),
         openapi.Parameter('audience', openapi.IN_QUERY, description='Description of audience', type=openapi.TYPE_STRING),
         openapi.Parameter('age_limits', openapi.IN_QUERY, description='Description of age_limits', type=openapi.TYPE_STRING),
         openapi.Parameter('type_of_location', openapi.IN_QUERY, description='Description of type_of_location', type=openapi.TYPE_STRING),
@@ -123,7 +120,8 @@ class EventViewSet(mixins.RetrieveModelMixin,
         else:
             return Response({"error": "dates are must"}, status=404)
     
-        # Create EventImages objects
+        print(request.FILES.getlist('images'))
+        # Create EventImages objects    
         for index, file in enumerate(request.FILES.getlist('images')):
             event_images = event.images.create(
                 image=file
