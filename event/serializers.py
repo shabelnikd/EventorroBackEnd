@@ -5,14 +5,7 @@ from tickets.serializers import TicketSerializer
 
 link = settings.LINK
 
-class AudienceField(serializers.ChoiceField):
-    def to_representation(self, value):
-        # Find the label for the given value
-        label = dict(self.choices)[value]
-        # Return the label as the representation
-        return label
-
-class AgeLimitsField(serializers.ChoiceField):
+class ChoiceListField(serializers.ChoiceField):
     def to_representation(self, value):
         # Find the label for the given value
         label = dict(self.choices)[value]
@@ -20,8 +13,11 @@ class AgeLimitsField(serializers.ChoiceField):
         return label
 
 class EventListSerializer(serializers.ModelSerializer):
-    audience = AudienceField(choices=Event.AUDIENCE_CHOICES)
-    age_limits = AgeLimitsField(choices=Event.AGE)
+    audience = ChoiceListField(choices=Event.AUDIENCE_CHOICES)
+    age_limits = ChoiceListField(choices=Event.AGE)
+    type_of_location = ChoiceListField(choices=Event.PLACES)
+    type_of_location2 = ChoiceListField(choices=Event.PLACES)
+
 
     class Meta:
         model = Event

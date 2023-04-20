@@ -40,6 +40,9 @@ class User(AbstractBaseUser):
     whatsapp = models.CharField(max_length=50, blank=True, null=True)
     phone = models.CharField(max_length=50, blank=True, null=True)
     avatar = models.ImageField(upload_to='media/', blank=True, null=True)
+    poster = models.ImageField(upload_to='media/', blank=True, null=True)
+    bio = models.CharField(max_length=300, blank=True, null=True)
+
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['name', 'last_name']
