@@ -27,7 +27,7 @@ class Event(models.Model):
         ('20', 'Спа Центр'),
         ('21', 'Тойкана'),
     )
-    
+
     AUDIENCE_CHOICES = (
         ('1', 'Для всех'),
         ('2', 'Для детей'),
@@ -44,8 +44,8 @@ class Event(models.Model):
     name = models.CharField(max_length=200)
     poster = models.ImageField(upload_to='media/')
     categories = models.ManyToManyField(Category, related_name='events')
-    audience = models.CharField(max_length=6, choices=AUDIENCE_CHOICES)
-    age_limits = models.CharField(max_length=6, choices=AGE)
+    audience = models.CharField(max_length=50, choices=AUDIENCE_CHOICES)
+    age_limits = models.CharField(max_length=50, choices=AGE)
     price = models.DecimalField(max_digits=15, decimal_places=2)
     video = models.CharField(max_length=200)
     description = models.TextField()
