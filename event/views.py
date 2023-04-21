@@ -111,8 +111,9 @@ class EventViewSet(mixins.RetrieveModelMixin,
         location_link = request.data.get('location_link')
         age_limits = request.data.get('age_limits')
         audience = request.data.get('audience')
+        poster = request.data.get('poster')
 
-        event = Event.objects.create(name=name, description=description, price=price, video=video, location_link=location_link, age_limits=age_limits,  audience=audience, author_id=author)
+        event = Event.objects.create(name=name, description=description, price=price, video=video, location_link=location_link, age_limits=age_limits,  audience=audience, author_id=author, poster=poster)
 
         if request.POST.getlist('categories'):
             categories = request.POST.getlist('categories')
