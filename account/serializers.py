@@ -163,7 +163,7 @@ class UserHostDetailsSerializer(serializers.ModelSerializer):
 class UserGuestDetailsSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('email', 'name', 'last_name', 'is_host', 'is_guest', 'avatar')
+        fields = ('email', 'name', 'last_name', 'is_host', 'is_guest', 'avatar', 'phone')
 
 
     def to_representation(self, instance):
