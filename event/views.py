@@ -131,6 +131,7 @@ class EventViewSet(mixins.RetrieveModelMixin,
         print(request.FILES.getlist('images'))
         # Create EventImages objects    
         for index, file in request.FILES.getlist('images'):
+            print(file)
             event_images = event.images.create(
                 image=file
             )
