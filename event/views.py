@@ -94,30 +94,27 @@ class EventViewSet(mixins.RetrieveModelMixin,
     @action(detail=False, methods=['post'])
     @swagger_auto_schema(request_body=serializers.EventSerializer())
     def create_event(self, request):
-        print()
-        print()
-        print()
-        print()
-        print()
-        print()
-        print()
-        print(request)
         name = request.data.get('name')
         author = request.user.id
         description = request.data.get('description')
         price = request.data.get('price')
         video = request.data.get('video')
-        # location = request.data.get('location')
+        image1 = request.data.get('image1')
+        image2 = request.data.get('image2')
+        image3 = request.data.get('image3')
+        image4 = request.data.get('image4')
+        image5 = request.data.get('image5')
         location_link = request.data.get('location_link')
         age_limits = request.data.get('age_limits')
         audience = request.data.get('audience')
+        type_of_location = request.data.get('type_of_location')
+        type_of_location2 = request.data.get('type_of_location2')
         poster = request.data.get('poster')
 
-        event = Event.objects.create(name=name, description=description, price=price, video=video, location_link=location_link, age_limits=age_limits,  audience=audience, author_id=author, poster=poster)
+        event = Event.objects.create(name=name, description=description, price=price, video=video, location_link=location_link, age_limits=age_limits,  audience=audience, author_id=author, poster=poster, image1=image1, image2=image2, image3=image3, image4=image4, image5=image5, type_of_location=type_of_location, type_of_location2=type_of_location2)
 
         if request.POST.getlist('categories'):
             categories = request.POST.getlist('categories')
-            print(categories)
             for cat in categories:
                 event.categories.add(cat)
 
@@ -129,15 +126,7 @@ class EventViewSet(mixins.RetrieveModelMixin,
         else:
             return Response({"error": "dates are must"}, status=404)
     
-        print(request.FILES.getlist('images'))
-        # Create EventImages objects    
-        for index, file in enumerate(request.FILES.getlist('images')):
-            event_images = event.images.create(
-                image=file
-            )
-
-        serializer = self.get_serializer(event)
-        return Response(serializer.data)
+        return Response(serializers.data, status=201)
         
 
     @action(detail=True, methods=['put'])
@@ -156,7 +145,6 @@ class EventViewSet(mixins.RetrieveModelMixin,
         location = request.data.get('location', event.location)
         location_link = request.data.get('location_link', event.location_link)
         age_limits = request.data.get('age_limits', event.age_limits)
-        category_id = request.data.get('main_category', event.main_category.id if event.main_category else None)
         contacts = request.data.get('contacts', event.contacts)
         audience = request.data.get('audience', event.audience)
 
