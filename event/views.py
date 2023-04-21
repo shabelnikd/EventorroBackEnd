@@ -101,7 +101,7 @@ class EventViewSet(mixins.RetrieveModelMixin,
         print()
         print()
         print()
-        print(request.data)
+        print(request)
         name = request.data.get('name')
         author = request.user.id
         description = request.data.get('description')
@@ -117,7 +117,7 @@ class EventViewSet(mixins.RetrieveModelMixin,
         if request.POST.getlist('categories'):
             categories = request.POST.getlist('categories')
             print(categories)
-            for i, cat in categories:
+            for cat in categories:
                 event.categories.add(cat)
 
         # Create EventDate objects
@@ -130,8 +130,7 @@ class EventViewSet(mixins.RetrieveModelMixin,
     
         print(request.FILES.getlist('images'))
         # Create EventImages objects    
-        for index, file in request.FILES.getlist('images'):
-            print(file)
+        for index, file in enumerate(request.FILES.getlist('images')):
             event_images = event.images.create(
                 image=file
             )
