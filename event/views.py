@@ -94,6 +94,14 @@ class EventViewSet(mixins.RetrieveModelMixin,
     @action(detail=False, methods=['post'])
     @swagger_auto_schema(request_body=serializers.EventSerializer())
     def create_event(self, request):
+        print()
+        print()
+        print()
+        print()
+        print()
+        print()
+        print()
+        print(request.data)
         name = request.data.get('name')
         author = request.user.id
         description = request.data.get('description')
