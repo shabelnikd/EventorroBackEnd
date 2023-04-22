@@ -139,14 +139,12 @@ class ChangePasswordSerializer(serializers.ModelSerializer):
 class UserHostDetailsSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('email', 'name', 'last_name', 'is_host', 'is_guest', 'telegram', 'whatsapp', 'phone', 'avatar', 'bio', 'poster')
+        fields = ('email', 'name', 'last_name', 'is_host', 'is_guest', 'organization_name', 'phone', 'avatar', 'bio', 'poster')
 
     def to_representation(self, instance):
         rep = super().to_representation(instance)
         rep['events_by_user'] = EventListSerializer(instance.events.all(), many=True).data
-        rep['telegram'] = instance.telegram
         rep['phone'] = instance.phone
-        rep['whatsapp'] = instance.whatsapp
         if instance.avatar:
             rep['avatar'] = f"{LINK}/media/{instance.avatar}"
         else:

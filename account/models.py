@@ -36,12 +36,11 @@ class User(AbstractBaseUser):
     is_guest = models.BooleanField(default=False)
     is_host = models.BooleanField(default=False)
     activation_code = models.CharField(max_length=8, blank=True)
-    telegram = models.CharField(max_length=50, blank=True, null=True)
-    whatsapp = models.CharField(max_length=50, blank=True, null=True)
     phone = models.CharField(max_length=50, blank=True, null=True)
     avatar = models.ImageField(upload_to='media/', blank=True, null=True)
     poster = models.ImageField(upload_to='media/', blank=True, null=True)
     bio = models.CharField(max_length=300, blank=True, null=True)
+    organization_name = models.CharField(max_length=200, blank=True, null=True)
 
 
     USERNAME_FIELD = 'email'
