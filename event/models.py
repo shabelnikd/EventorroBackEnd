@@ -53,7 +53,11 @@ class Event(models.Model):
     type_of_location2 = models.CharField(max_length=200, choices=PLACES, null=True, blank=True)
     tickets_number = models.IntegerField(null=True, blank=True)
     location_link = models.CharField(max_length=200)
-
+    image1 = models.ImageField(upload_to='media/', null=True, blank=True)
+    image2 = models.ImageField(upload_to='media/', null=True, blank=True)
+    image3 = models.ImageField(upload_to='media/', null=True, blank=True)
+    image4 = models.ImageField(upload_to='media/', null=True, blank=True)
+    image5 = models.ImageField(upload_to='media/', null=True, blank=True)
 
     def __str__(self) -> str:
         return self.name
@@ -66,9 +70,4 @@ class EventDate(models.Model):
 
     def __str__(self) -> str:
         return f"{self.date_time}"
-
-class EventImages(models.Model):
-    image = models.FileField(upload_to='media/')
-    event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='images')
-
 
