@@ -117,7 +117,7 @@ class EventViewSet(mixins.RetrieveModelMixin,
             categories = request.POST.getlist('categories')
             for cat in categories:
                 event.categories.add(cat)
-
+        print(request.POST)
         # Create EventDate objects
         if request.POST.getlist('event_dates'): #[{"date_time": "2020-05"}]
             event_dates = request.POST.getlist('event_dates')
