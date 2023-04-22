@@ -126,7 +126,7 @@ class EventViewSet(mixins.RetrieveModelMixin,
         else:
             return Response({"error": "dates are must"}, status=404)
     
-        return Response(serializers.data, status=201)
+        return Response(serializers.EventListSerializer(event).data, status=201)
         
 
     @action(detail=True, methods=['put'])
