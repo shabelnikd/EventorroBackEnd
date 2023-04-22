@@ -15,10 +15,10 @@ class ChoiceListField(serializers.ChoiceField):
 
 
 class EventListSerializer(serializers.ModelSerializer):
-    audience = ChoiceListField(choices=Event.AUDIENCE_CHOICES)
-    age_limits = ChoiceListField(choices=Event.AGE)
-    type_of_location = ChoiceListField(choices=Event.PLACES)
-    type_of_location2 = ChoiceListField(choices=Event.PLACES)
+    # audience = ChoiceListField(choices=Event.AUDIENCE_CHOICES)
+    # age_limits = ChoiceListField(choices=Event.AGE)
+    # type_of_location = ChoiceListField(choices=Event.PLACES)
+    # type_of_location2 = ChoiceListField(choices=Event.PLACES)
 
     class Meta:
         model = Event
