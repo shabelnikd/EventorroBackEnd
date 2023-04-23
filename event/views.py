@@ -137,45 +137,56 @@ class EventViewSet(mixins.RetrieveModelMixin,
         except Event.DoesNotExist:
             return Response({'error': 'Event does not exist.'}, status=status.HTTP_404_NOT_FOUND)
 
-        existing_event_dates = list(event.event_dates.all())
-        name = request.data.get('name', event.name)
-        description = request.data.get('description', event.description)
-        price = request.data.get('price', event.price)
-        video = request.data.get('video', event.video)
-        location = request.data.get('location', event.location)
-        location_link = request.data.get('location_link', event.location_link)
-        age_limits = request.data.get('age_limits', event.age_limits)
-        contacts = request.data.get('contacts', event.contacts)
-        audience = request.data.get('audience', event.audience)
+        name = request.data.get('name')
+        description = request.data.get('description')
+        price = request.data.get('price')
+        video = request.data.get('video')
+        image1 = request.data.get('image1')
+        image2 = request.data.get('image2')
+        image3 = request.data.get('image3')
+        image4 = request.data.get('image4')
+        image5 = request.data.get('image5')
+        location_link = request.data.get('location_link')
+        age_limits = request.data.get('age_limits')
+        audience = request.data.get('audience')
+        type_of_location = request.data.get('type_of_location')
+        type_of_location2 = request.data.get('type_of_location2')
+        poster = request.data.get('poster')
+        tickets_count = request.data.get('tickets_count')
 
         event.name = name
         event.description = description
         event.price = price
         event.video = video
-        event.location = location
         event.location_link = location_link
         event.age_limits = age_limits
-        event.contacts = contacts
         event.audience = audience
+        event.type_of_location = type_of_location
+        event.type_of_location2 = type_of_location2
+        event.poster = poster
+        event.image1 = image1
+        event.image2 = image2
+        event.image3 = image3
+        event.image4 = image4
+        event.image5 = image5
+        event.tickets_number = tickets_count
         event.save()
 
         # Update EventDates objects
-        if not request.POST.getlist('event_dates'):
-            event_dates = [i.date_time for i in existing_event_dates]
-        else:
-            event_dates = request.POST.getlist('event_dates')
-        event.event_dates.all().delete()
-        for event_date in event_dates:
-            event.event_dates.get_or_create(date_time=event_date, status=bool(False))
+        if request.POST.getlist('event_dates[]'):
+            event_dates = request.POST.getlist('event_dates[]')
+            event.event_dates.all().delete()
+            for event_date in event_dates:
+                event.event_dates.get_or_create(date_time=event_date, status=bool(False))
 
-        # Update EventImages objects
-        if request.FILES.getlist('images'):
-            event.images.all().delete()
-            for index, file in enumerate(request.FILES.getlist('images')):
-                event.images.create(image=file)
+        if request.POST.getlist('categories[]'):
+            categories = request.POST.getlist('categories[]')
+            event.categories.all().delete()
+            for cat in categories:
+                event.categories.add(cat)
 
-        serializer = self.get_serializer(event)
-        return Response(serializer.data)
+        # serializer = self.get_serializer(event)
+        return Response(serializers.EventListSerializer(event).data)
 
     @action(detail=True, methods=['delete'])
     def delete_event(self, request, pk=None):
