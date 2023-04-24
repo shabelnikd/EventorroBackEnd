@@ -1,11 +1,5 @@
 from django.contrib import admin
-from .models import Event, EventDate
-# Register your models here.
-
-# # admin.site.register(Event)
-# class EventImagesInLine(admin.StackedInline):
-#     model = EventImages
-#     display = ('image')
+from .models import Event, EventDate, Favorite
 
 class EventDateInLine(admin.StackedInline):
     model = EventDate
@@ -16,9 +10,9 @@ class EventAdmin(admin.ModelAdmin):
     model = Event
     display = '__all__'
     inlines = [
-        # EventImagesInLine,
         EventDateInLine,
     ]
 
 
 
+admin.site.register(Favorite)

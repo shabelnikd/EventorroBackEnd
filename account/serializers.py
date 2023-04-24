@@ -3,6 +3,7 @@ from rest_framework import serializers
 from django.contrib.auth import get_user_model
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer 
 from event.serializers import EventListSerializer
+from event.models import Favorite, Event
 from django.conf import settings
 
 
@@ -136,6 +137,18 @@ class ChangePasswordSerializer(serializers.ModelSerializer):
         user.save()
 
 
+class FavoriteListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Favorite
+        fields = ('event', )
+    
+    def to_representation(self, instance):
+        rep = super().to_representation(instance)
+        # print(instance.event)
+        rep['event'] = EventListSerializer(Event.objects.get(id=instance.event_id)).data
+        return rep
+
+
 class UserHostDetailsSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
@@ -154,7 +167,7 @@ class UserHostDetailsSerializer(serializers.ModelSerializer):
         else:
             rep['poster'] = ""
         rep['bio'] = instance.bio
-
+        rep['saved'] = FavoriteListSerializer(instance.favorites.all(), many=True).data
         return rep
 
 
@@ -170,4 +183,5 @@ class UserGuestDetailsSerializer(serializers.ModelSerializer):
             rep['avatar'] = f"{LINK}/media/{instance.avatar}"
         else:
             rep['avatar'] = ""
+        rep['saved'] = FavoriteListSerializer(instance.favorites.all(), many=True).data
         return rep

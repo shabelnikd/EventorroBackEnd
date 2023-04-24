@@ -6,8 +6,9 @@ from .filters import EventFilter
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from .permissions import IsAuthor
 from rest_framework.decorators import action
+from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
-from .models import Event, EventDate
+from .models import Event, EventDate, Favorite
 from rest_framework import status, mixins
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
@@ -198,3 +199,15 @@ class EventViewSet(mixins.RetrieveModelMixin,
 
         event.delete()
         return Response({'success': 'Event deleted successfully.'}, status=status.HTTP_204_NO_CONTENT)
+    
+    @action(detail=True, methods=['GET'])
+    def add_favorite(self, request, pk):
+        if not request.user.is_authenticated:
+            return Response(status=401)
+        event = get_object_or_404(Event, id=pk)
+        if Favorite.objects.filter(user=request.user, event=event).exists():
+            Favorite.objects.filter(user=request.user, event=event).delete()
+            return Response('удалено')
+        else:
+            Favorite.objects.create(user=request.user, event=event)
+        return Response('сохранено', status=201)

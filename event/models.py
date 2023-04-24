@@ -71,3 +71,10 @@ class EventDate(models.Model):
     def __str__(self) -> str:
         return f"{self.date_time}"
 
+
+class Favorite(models.Model):
+    user = models.ForeignKey(User, related_name='favorites', on_delete=models.CASCADE)
+    event = models.ForeignKey(Event, related_name='favorites', on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f'{self.user.email} -> {self.event.name}'
