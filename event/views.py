@@ -58,6 +58,9 @@ class EventViewSet(mixins.RetrieveModelMixin,
         if audience:
             filters &= Q(audience=audience)
         if age_limits:
+            if age_limits[0:-1].isdigit():
+                age_limits += '+'
+                age_limits = "".join(age_limits.split())
             filters &= Q(age_limits=age_limits)
         if type_of_location:
             filters &= Q(type_of_location=type_of_location)
