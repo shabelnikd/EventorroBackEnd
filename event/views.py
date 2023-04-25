@@ -84,12 +84,15 @@ class EventViewSet(mixins.RetrieveModelMixin,
         return queryset
     
     @swagger_auto_schema(manual_parameters=[
-        openapi.Parameter('category', openapi.IN_QUERY, description='Description of audience', type=openapi.TYPE_STRING),
-        openapi.Parameter('audience', openapi.IN_QUERY, description='Description of audience', type=openapi.TYPE_STRING),
-        openapi.Parameter('age_limits', openapi.IN_QUERY, description='Description of age_limits', type=openapi.TYPE_STRING),
-        openapi.Parameter('type_of_location', openapi.IN_QUERY, description='Description of type_of_location', type=openapi.TYPE_STRING),
-        openapi.Parameter('type_of_location2', openapi.IN_QUERY, description='Description of type_of_location2', type=openapi.TYPE_STRING),
-        openapi.Parameter('price_from' and 'price_to', openapi.IN_QUERY, description='Description of price_from and price_to', type=openapi.TYPE_STRING),
+        openapi.Parameter('category', openapi.IN_QUERY, description='Filter value of audience', type=openapi.TYPE_STRING),
+        openapi.Parameter('audience', openapi.IN_QUERY, description='Filter value of audience', type=openapi.TYPE_STRING),
+        openapi.Parameter('age_limits', openapi.IN_QUERY, description='Filter value of age_limits', type=openapi.TYPE_STRING),
+        openapi.Parameter('type_of_location', openapi.IN_QUERY, description='Filter value of type_of_location', type=openapi.TYPE_STRING),
+        openapi.Parameter('type_of_location2', openapi.IN_QUERY, description='Filter value of type_of_location2', type=openapi.TYPE_STRING),
+        openapi.Parameter('price_from', openapi.IN_QUERY, description='Filter value of price_from', type=openapi.TYPE_STRING),
+        openapi.Parameter('price_to', openapi.IN_QUERY, description='Filter value of price_to', type=openapi.TYPE_STRING),
+        openapi.Parameter('date', openapi.IN_QUERY, description='Filter value of date', type=openapi.TYPE_STRING),
+    
 
     ])
     def list(self, request, *args, **kwargs):
