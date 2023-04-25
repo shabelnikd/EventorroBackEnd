@@ -68,6 +68,10 @@ class EventViewSet(mixins.RetrieveModelMixin,
             filters &= Q(type_of_location2=type_of_location2)
         if price_from and price_to:
             filters &= Q(price__range=(price_from, price_to))
+        elif price_from:
+            filters &= Q(price__range=(price_from, 1000_000))
+        elif price_to:
+            filters &= Q(price__range=(0, price_to))
 
         # Apply filters to queryset
         queryset = queryset.filter(filters)
