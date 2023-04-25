@@ -46,7 +46,13 @@ class EventViewSet(mixins.RetrieveModelMixin,
         type_of_location2 = self.request.query_params.get('type_of_location2')
         price_from = self.request.query_params.get('price_from')
         price_to = self.request.query_params.get('price_to')
+        date = self.request.query_params.get('date')
 
+        if date:
+            # Filter events that have an EventDate with the specified date
+            queryset = queryset.filter(
+                Q(event_dates__date_time__date=date)
+            ).distinct()
         # Use select_related to optimize related object queries
         queryset = queryset.select_related('author')
 
@@ -69,7 +75,7 @@ class EventViewSet(mixins.RetrieveModelMixin,
         if price_from and price_to:
             filters &= Q(price__range=(price_from, price_to))
         elif price_from:
-            filters &= Q(price__range=(price_from, 1000_000))
+            filters &= Q(price__range=(price_from, 1_000_000))
         elif price_to:
             filters &= Q(price__range=(0, price_to))
 
