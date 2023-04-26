@@ -12,4 +12,5 @@ urlpatterns = [
     path('reset_password/', views.ResetPasswordView.as_view()),
     path('reset_password_complete/', views.ResetPasswordCompleteView.as_view()),
     path('change_password/', views.ChangePasswordView.as_view()),
+    path('events_by/<str:email>/', views.UserEventsView.as_view()),
 ]

@@ -90,3 +90,9 @@ class DetailsUserView(APIView):
             return Response(serializer.data)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+class UserEventsView(APIView):
+    def get(self, request, email):
+        email = self.kwargs.get('email')
+        user = get_object_or_404(User, email=email)
+        return Response(UserHostDetailsSerializer(user).data)
