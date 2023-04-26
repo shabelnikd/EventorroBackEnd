@@ -44,7 +44,7 @@ class EventListSerializer(serializers.ModelSerializer):
         repr['categories'] = EventCategorySerializer(instance.categories, many=True).data
         repr['event_dates'] = EventDateListSerializer(instance.event_dates.exclude(status=True).order_by('date_time'), many=True).data
         repr['author'] = instance.author.email
-        repr['tickets_count'] = instance.tickets_number
+        repr['tickets_number'] = instance.tickets_number
         repr['ticket_users'] = TicketSerializer(instance.tickets, many=True).data
         repr['poster'] = f"{link}/media/{instance.poster}"
         return repr
