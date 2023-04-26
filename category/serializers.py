@@ -7,12 +7,10 @@ class SubCategorySerializer(serializers.ModelSerializer):
         exclude = ('parent', )
 
 class CategoryListSerializer(serializers.ModelSerializer):
-    # children = serializers.SerializerMethodField()
 
     class Meta:
         model = Category
         exclude = ('parent', )
-
 
 
     def to_representation(self, instance):

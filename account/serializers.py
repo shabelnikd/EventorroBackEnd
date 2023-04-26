@@ -144,7 +144,6 @@ class FavoriteListSerializer(serializers.ModelSerializer):
     
     def to_representation(self, instance):
         rep = super().to_representation(instance)
-        # print(instance.event)
         rep['event'] = EventListSerializer(Event.objects.get(id=instance.event_id)).data
         return rep
 
