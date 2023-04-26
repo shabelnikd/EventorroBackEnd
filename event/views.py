@@ -241,10 +241,11 @@ class EventViewSet(mixins.RetrieveModelMixin,
             event.save()
             return Response('Вы успешно отменили бронь на событие')
         else:
-            if event.tickets_number >= 1:
-                Ticket.objects.create(user=request.user, event=event)
-                event.tickets_number -= 1
-                event.save()
+            if event.tickets_number != None and event.tickets_number!=0:
+                if event.tickets_number >= 1:
+                    Ticket.objects.create(user=request.user, event=event)
+                    event.tickets_number -= 1
+                    event.save()
             else:
                 return Response('К сожалению билетов на это событие не осталось')
         message = send_mails.send_guest_mail(user=user, event=event)
