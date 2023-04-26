@@ -1,17 +1,18 @@
 from rest_framework import serializers
-from .models import Event, EventDate
+from .models import Event, EventDate, Ticket
 from category.models import Category
 from django.conf import settings
-from tickets.serializers import TicketSerializer
+# from tickets.serializers import TicketSerializer
 
 link = settings.LINK
 
-class ChoiceListField(serializers.ChoiceField):
-    def to_representation(self, value):
-        # Find the label for the given value
-        label = dict(self.choices)[value]
-        # Return the label as the representation
-        return label
+
+# class ChoiceListField(serializers.ChoiceField):
+#     def to_representation(self, value):
+#         # Find the label for the given value
+#         label = dict(self.choices)[value]
+#         # Return the label as the representation
+#         return label
 
 
 class EventListSerializer(serializers.ModelSerializer):
@@ -48,6 +49,20 @@ class EventListSerializer(serializers.ModelSerializer):
         repr['poster'] = f"{link}/media/{instance.poster}"
         return repr
 
+    
+class TicketSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Ticket
+        exclude = ('event', 'user')
+
+    def to_representation(self, instance):
+        rep = super().to_representation(instance)
+        rep['event'] = instance.event.name
+        rep['name'] = instance.user.name
+        rep['last_name'] = instance.user.last_name
+        rep['email'] = instance.user.email
+        return rep
+    
 
 class EventDateSerializer(serializers.ModelSerializer):
     event = serializers.ReadOnlyField(source='event.id')

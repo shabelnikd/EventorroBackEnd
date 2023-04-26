@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Event, EventDate, Favorite
+from .models import Event, EventDate, Favorite, Ticket
 
 class EventDateInLine(admin.StackedInline):
     model = EventDate
@@ -16,3 +16,4 @@ class EventAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Favorite)
+admin.site.register(Ticket)

@@ -8,11 +8,12 @@ from .permissions import IsAuthor
 from rest_framework.decorators import action
 from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
-from .models import Event, EventDate, Favorite
+from .models import Event, EventDate, Favorite, Ticket
 from rest_framework import status, mixins
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 from django.db.models import Q
+from .extra import send_mails
 
 
 
@@ -201,8 +202,6 @@ class EventViewSet(mixins.RetrieveModelMixin,
             event.categories.all().delete()
             for cat in categories:
                 event.categories.add(cat)
-
-        # serializer = self.get_serializer(event)
         return Response(serializers.EventListSerializer(event).data)
 
     @action(detail=True, methods=['delete'])
@@ -227,3 +226,25 @@ class EventViewSet(mixins.RetrieveModelMixin,
         else:
             Favorite.objects.create(user=request.user, event=event)
         return Response('сохранено', status=201)
+
+    @action(detail=True, methods=['GET'])
+    def get_ticket(self, request, pk):
+        if not request.user.is_authenticated:
+            return Response(status=401)
+        user = self.request.user
+        event = get_object_or_404(Event, id=pk)
+        if Ticket.objects.filter(user=request.user, event=event).exists():
+            Ticket.objects.filter(user=request.user, event=event).delete()
+            event.tickets_number += 1
+            event.save()
+            return Response('Вы успешно отменили бронь на событие')
+        else:
+            if event.tickets_number >= 1:
+                Ticket.objects.create(user=request.user, event=event)
+                event.tickets_number -= 1
+                event.save()
+            else:
+                return Response('К сожалению билетов на это событие не осталось')
+        message = send_mails.send_guest_mail(user=user, event=event)
+        send_mails.send_host_mail(user, event)
+        return Response(message, status=201)
