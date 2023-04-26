@@ -170,7 +170,7 @@ class EventViewSet(mixins.RetrieveModelMixin,
         type_of_location = request.data.get('type_of_location')
         type_of_location2 = request.data.get('type_of_location2')
         poster = request.data.get('poster')
-        tickets_count = request.data.get('tickets_count')
+        tickets_number = request.data.get('tickets_number')
 
         event.name = name
         event.description = description
@@ -187,7 +187,7 @@ class EventViewSet(mixins.RetrieveModelMixin,
         event.image3 = image3
         event.image4 = image4
         event.image5 = image5
-        event.tickets_number = tickets_count
+        event.tickets_number = tickets_number
         event.save()
 
         # Update EventDates objects
