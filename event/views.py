@@ -183,12 +183,18 @@ class EventViewSet(mixins.RetrieveModelMixin,
         event.audience = audience
         event.type_of_location = type_of_location
         event.type_of_location2 = type_of_location2
-        event.poster = poster
-        event.image1 = image1
-        event.image2 = image2
-        event.image3 = image3
-        event.image4 = image4
-        event.image5 = image5
+        if poster:
+            event.poster = poster
+        if image1:
+            event.image1 = image1
+        if image2:
+            event.image2 = image2
+        if image3:
+            event.image3 = image3
+        if image4:
+            event.image4 = image4
+        if image5:        
+            event.image5 = image5
         event.tickets_number = tickets_number
         event.save()
 
