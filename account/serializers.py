@@ -173,11 +173,15 @@ class UserHostDetailsSerializer(serializers.ModelSerializer):
 class UserGuestDetailsSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('email', 'name', 'last_name', 'is_host', 'is_guest', 'avatar', 'phone')
+        fields = ('email', 'name', 'last_name', 'is_host', 'is_guest', 'avatar', 'phone', 'organization_name')
 
 
     def to_representation(self, instance):
         rep = super().to_representation(instance)
+        try:
+            rep.pop('organization_name')
+        except:
+            pass
         if instance.avatar:
             rep['avatar'] = f"{LINK}/media/{instance.avatar}"
         else:
