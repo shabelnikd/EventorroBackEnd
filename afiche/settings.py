@@ -159,7 +159,7 @@ CORS_ALLOWED_ORIGINS = [
     'http://127.0.0.1:3000',
     'http://127.0.0.1:3001', 
     'https://www.thunderclient.com',
-    'https://afiche-production.up.railway.app'
+    'https://afiche-production.up.railway.app',
     'https://eventorro.live/',
 ]
 
@@ -208,5 +208,5 @@ EMAIL_HOST_USER = config('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 
 
-CSRF_TRUSTED_ORIGINS=['https://afiche-production.up.railway.app'
+CSRF_TRUSTED_ORIGINS=['https://afiche-production.up.railway.app',
     'https://eventorro.live/',]
