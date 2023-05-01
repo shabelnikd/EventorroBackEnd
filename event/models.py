@@ -80,8 +80,11 @@ class Favorite(models.Model):
         return f'{self.user.email} -> {self.event.name}'
 
 class Ticket(models.Model):
-    user = models.ForeignKey(User, related_name='tickets', on_delete=models.CASCADE)
-    event = models.ForeignKey(Event, related_name='tickets', on_delete=models.CASCADE)
+    user = models.ForeignKey(User, related_name='tickets', on_delete=models.SET_NULL, null=True)
+    event = models.ForeignKey(Event, related_name='tickets', on_delete=models.SET_NULL, null=True)
 
     def __str__(self):
-        return f'{self.user.email} -> {self.event.name}'
+        if self.user:
+            return f'{self.user.email} -> {self.event.name}'
+        else:
+            return 'deleted event or user tickets'

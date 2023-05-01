@@ -217,11 +217,10 @@ class EventViewSet(mixins.RetrieveModelMixin,
         self.check_object_permissions(request, self.get_object())
         try:
             event = self.get_queryset().get(pk=pk)
+            event.delete()
+            return Response({'success': 'Event deleted successfully.'}, status=status.HTTP_204_NO_CONTENT)
         except Event.DoesNotExist:
             return Response({'error': 'Event does not exist.'}, status=status.HTTP_404_NOT_FOUND)
-
-        event.delete()
-        return Response({'success': 'Event deleted successfully.'}, status=status.HTTP_204_NO_CONTENT)
     
     @action(detail=True, methods=['GET'])
     def add_favorite(self, request, pk):
@@ -245,7 +244,7 @@ class EventViewSet(mixins.RetrieveModelMixin,
             Ticket.objects.filter(user=request.user, event=event).delete()
             event.tickets_number += 1
             event.save()
-            return Response('Вы успешно отменили бронь на событие')
+            return Response('Удалено')
         else:
             if event.tickets_number != None and event.tickets_number!=0:
                 if event.tickets_number >= 1:
@@ -253,7 +252,7 @@ class EventViewSet(mixins.RetrieveModelMixin,
                     event.tickets_number -= 1
                     event.save()
             else:
-                return Response('К сожалению билетов на это событие не осталось')
-        message = send_mails.send_guest_mail(user=user, event=event)
+                return Response('Билетов не осталось')
+        send_mails.send_guest_mail(user=user, event=event)
         send_mails.send_host_mail(user, event)
-        return Response(message, status=201)
+        return Response('Сохранено', status=201)

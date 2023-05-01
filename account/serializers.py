@@ -19,7 +19,7 @@ class RegisterSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('email', 'password', 'password_confirm', 'name', 'last_name', 'is_guest', 'is_host')
+        fields = ('email', 'password', 'password_confirm', 'name', 'last_name', 'is_guest', 'is_host', 'organization_name')
 
     def validate_email(self, email):
         if User.objects.filter(email=email).exists():
@@ -68,6 +68,7 @@ class LoginSerializer(TokenObtainPairSerializer):
         attrs['name'] = user.name
         if user.is_host:
             attrs['events'] = EventListSerializer(user.events, many=True).data
+            attrs['organization_name'] = user.organization_name
         return attrs
 
 
