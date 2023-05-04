@@ -2,8 +2,8 @@ from django.core.mail import send_mail
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer 
-from event.serializers import EventListSerializer
-from event.models import Favorite, Event
+from event.serializers import EventListSerializer, TicketSerializer
+from event.models import Favorite, Event, Ticket
 from django.conf import settings
 
 
@@ -168,6 +168,7 @@ class UserHostDetailsSerializer(serializers.ModelSerializer):
             rep['poster'] = ""
         rep['bio'] = instance.bio
         rep['saved'] = FavoriteListSerializer(instance.favorites.all(), many=True).data
+        rep['tickets'] = TicketSerializer(instance.tickets.all(), many=True).data
         return rep
 
 
@@ -188,4 +189,5 @@ class UserGuestDetailsSerializer(serializers.ModelSerializer):
         else:
             rep['avatar'] = ""
         rep['saved'] = FavoriteListSerializer(instance.favorites.all(), many=True).data
+        rep['tickets'] = TicketSerializer(instance.tickets.all(), many=True).data
         return rep

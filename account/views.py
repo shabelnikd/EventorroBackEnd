@@ -9,7 +9,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from drf_yasg.utils import swagger_auto_schema
 from .permissions import IsAuthor
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
 from .models import User
 from django.conf import settings
 
@@ -29,7 +29,7 @@ class ActivationView(APIView):
         user.activation_code = ''
         user.is_active = True
         user.save()
-        return Response({'redirect': f"{settings.DOMAIN}/api/v1/accounts/login/"}, status=302)
+        return redirect('https://eventorro.live/')
 
 class LoginView(TokenObtainPairView):
     permission_classes = [AllowAny, ]

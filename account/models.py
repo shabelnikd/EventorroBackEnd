@@ -39,7 +39,7 @@ class User(AbstractBaseUser):
     phone = models.CharField(max_length=50, blank=True, null=True)
     avatar = models.ImageField(upload_to='media/', blank=True, null=True)
     poster = models.ImageField(upload_to='media/', blank=True, null=True)
-    bio = models.CharField(max_length=300, blank=True, null=True)
+    bio = models.CharField(max_length=700, blank=True, null=True)
     organization_name = models.CharField(max_length=200, blank=True, null=True)
 
 
@@ -66,7 +66,7 @@ class User(AbstractBaseUser):
     def send_activation_mail(self):
         activation_url = f'{settings.LINK}/api/v1/accounts/activate/{self.activation_code}'
         message = f"""
-            Вы успешно зарегестрировались!
+            Вы успешно зарегистрировались!
             Активируйте ваш аккаунт {activation_url}
         """
         send_mail('Активация аккаунта',

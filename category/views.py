@@ -8,6 +8,11 @@ class CategoryListView(ListAPIView):
     queryset = Category.objects.filter(parent=None)
     serializer_class = CategoryListSerializer
 
+    def get_queryset(self):
+        queryset = super().get_queryset().order_by('name')
+        return queryset
+
+
 class CategoryDetailView(RetrieveAPIView):
     queryset = Category.objects.all()
     serializer_class = CategoryListSerializer
