@@ -2,17 +2,8 @@ from rest_framework import serializers
 from .models import Event, EventDate, Ticket
 from category.models import Category
 from django.conf import settings
-# from tickets.serializers import TicketSerializer
 
 link = settings.LINK
-
-
-# class ChoiceListField(serializers.ChoiceField):
-#     def to_representation(self, value):
-#         # Find the label for the given value
-#         label = dict(self.choices)[value]
-#         # Return the label as the representation
-#         return label
 
 
 class EventListSerializer(serializers.ModelSerializer):

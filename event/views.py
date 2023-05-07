@@ -24,6 +24,7 @@ class EventViewSet(mixins.RetrieveModelMixin,
     filter_backends = (DjangoFilterBackend,)
     filterset_class = EventFilter
     pagination_class = EventPagination
+    # lookup_url_kwarg = 'event_name'
 
     def get_serializer_class(self):
         if self.action in ['list', 'retrieve']:
@@ -101,6 +102,11 @@ class EventViewSet(mixins.RetrieveModelMixin,
 
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
+    
+    # def get_object(self, queryset=None):
+    #     event_name = self.kwargs.get(self.lookup_url_kwarg)  # retrieve the value of the 'event_id' keyword argument
+    #     obj = get_object_or_404(Event, name=event_name)  # retrieve the Event object with the specified ID
+    #     return obj
 
     @action(detail=False, methods=['post'])
     @swagger_auto_schema(request_body=serializers.EventSerializer())

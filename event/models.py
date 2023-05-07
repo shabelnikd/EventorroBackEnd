@@ -24,42 +24,6 @@ class Location(models.Model):
         return self.name
 
 class Event(models.Model):
-    PLACES = (
-        ('Бар', 'Бар'),
-        ('Ресторан', 'Ресторан'),
-        ('Кофейня', 'Кофейня'),
-        ('Ночной клуб', 'Ночной клуб'),
-        ('Концертный зал', 'Концертный зал'),
-        ('Театр', 'Театр'),
-        ('Музей', 'Музей'),
-        ('На улице', 'На улице'),
-        ('Учебное заведение', 'Учебное заведение'),
-        ('Торговый центр', 'Торговый центр'),
-        ('Кинотеатр', 'Кинотеатр' ),
-        ('Отель', 'Отель'),
-        ('Коворкинг', 'Коворкинг'),
-        ('Караоке', 'Караоке' ),
-        ('Кальянная', 'Кальянная'),
-        ('Магазин', 'Магазин'),
-        ('Конференц-зал', 'Конференц-зал'),
-        ('Спортивный зал', 'Спортивный зал'),
-        ('Салон красоты', 'Салон красоты'),
-        ('Спа Центр', 'Спа Центр'),
-        ('Тойкана', 'Тойкана'),
-    )
-
-    AUDIENCE_CHOICES = (
-        ('Для всех', 'Для всех'),
-        ('Для детей', 'Для детей'),
-        ('Для женщин', 'Для женщин'),
-        ('Для мужчин', 'Для мужчин'),
-    )
-    AGE = (
-        ('Без ограничений', 'Без ограничений'),
-        ('16+', '16+'),
-        ('18+', '18+'),
-        ('21+', '21+'),
-    ) 
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='events')
     name = models.CharField(max_length=200)
     poster = models.ImageField(upload_to='media/')
@@ -95,7 +59,7 @@ class Favorite(models.Model):
     user = models.ForeignKey(User, related_name='favorites', on_delete=models.CASCADE)
     event = models.ForeignKey(Event, related_name='favorites', on_delete=models.CASCADE)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f'{self.user.email} -> {self.event.name}'
 
 
@@ -103,7 +67,7 @@ class Ticket(models.Model):
     user = models.ForeignKey(User, related_name='tickets', on_delete=models.CASCADE)
     event = models.ForeignKey(Event, related_name='tickets', on_delete=models.CASCADE)
 
-    def __str__(self):
+    def __str__(self) -> str:
         if self.user:
             return f'{self.user.email} -> {self.event.name}'
         else:
