@@ -8,7 +8,7 @@ from .permissions import IsAuthor
 from rest_framework.decorators import action
 from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
-from .models import Event, EventDate, Favorite, Ticket
+from .models import Event, EventDate, Favorite, Ticket, Audience, Location, AgeLimit
 from rest_framework import status, mixins
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
@@ -44,7 +44,6 @@ class EventViewSet(mixins.RetrieveModelMixin,
         audience = self.request.query_params.get('audience')
         age_limits = self.request.query_params.get('age_limits')
         type_of_location = self.request.query_params.get('type_of_location')
-        type_of_location2 = self.request.query_params.get('type_of_location2')
         price_from = self.request.query_params.get('price_from')
         price_to = self.request.query_params.get('price_to')
         date = self.request.query_params.get('date')
@@ -63,16 +62,11 @@ class EventViewSet(mixins.RetrieveModelMixin,
         if category_ids:
             filters &= Q(categories__id__in=category_ids)
         if audience:
-            filters &= Q(audience=audience)
+            filters &= Q(audience__id=audience)
         if age_limits:
-            if age_limits[0:-1].isdigit():
-                age_limits += '+'
-                age_limits = "".join(age_limits.split())
-            filters &= Q(age_limits=age_limits)
+            filters &= Q(age_limits__id=age_limits)
         if type_of_location:
-            filters &= Q(type_of_location=type_of_location)
-        if type_of_location2:
-            filters &= Q(type_of_location2=type_of_location2)
+            filters &= Q(type_of_location__id=type_of_location)
         if price_from and price_to:
             filters &= Q(price__range=(price_from, price_to))
         elif price_from:
@@ -89,7 +83,6 @@ class EventViewSet(mixins.RetrieveModelMixin,
         openapi.Parameter('audience', openapi.IN_QUERY, description='Filter value of audience', type=openapi.TYPE_STRING),
         openapi.Parameter('age_limits', openapi.IN_QUERY, description='Filter value of age_limits', type=openapi.TYPE_STRING),
         openapi.Parameter('type_of_location', openapi.IN_QUERY, description='Filter value of type_of_location', type=openapi.TYPE_STRING),
-        openapi.Parameter('type_of_location2', openapi.IN_QUERY, description='Filter value of type_of_location2', type=openapi.TYPE_STRING),
         openapi.Parameter('price_from', openapi.IN_QUERY, description='Filter value of price_from', type=openapi.TYPE_STRING),
         openapi.Parameter('price_to', openapi.IN_QUERY, description='Filter value of price_to', type=openapi.TYPE_STRING),
         openapi.Parameter('date', openapi.IN_QUERY, description='Filter value of date', type=openapi.TYPE_STRING),
@@ -126,12 +119,11 @@ class EventViewSet(mixins.RetrieveModelMixin,
         age_limits = request.data.get('age_limits')
         audience = request.data.get('audience')
         type_of_location = request.data.get('type_of_location')
-        type_of_location2 = request.data.get('type_of_location2')
         poster = request.data.get('poster')
         tickets_number = request.data.get('tickets_number')
 
 
-        event = Event.objects.create(name=name, description=description, price=price, video=video, location_link=location_link, age_limits=age_limits,  audience=audience, author_id=author, poster=poster, image1=image1, image2=image2, image3=image3, image4=image4, image5=image5, type_of_location=type_of_location, type_of_location2=type_of_location2, tickets_number=tickets_number)
+        event = Event.objects.create(name=name, description=description, price=price, video=video, location_link=location_link, age_limits=get_object_or_404(AgeLimit, name=age_limits),  audience=get_object_or_404(Audience, name=audience), author_id=author, poster=poster, image1=image1, image2=image2, image3=image3, image4=image4, image5=image5, type_of_location=get_object_or_404(Location, name=type_of_location), tickets_number=tickets_number)
 
         if request.POST.getlist('categories[]'):
             categories = request.POST.getlist('categories[]')
@@ -170,7 +162,6 @@ class EventViewSet(mixins.RetrieveModelMixin,
         age_limits = request.data.get('age_limits')
         audience = request.data.get('audience')
         type_of_location = request.data.get('type_of_location')
-        type_of_location2 = request.data.get('type_of_location2')
         poster = request.data.get('poster')
         tickets_number = request.data.get('tickets_number')
 
@@ -179,10 +170,9 @@ class EventViewSet(mixins.RetrieveModelMixin,
         event.price = price
         event.video = video
         event.location_link = location_link
-        event.age_limits = age_limits
-        event.audience = audience
-        event.type_of_location = type_of_location
-        event.type_of_location2 = type_of_location2
+        event.age_limits = get_object_or_404(AgeLimit, name=age_limits)
+        event.audience = get_object_or_404(Audience, name=audience)
+        event.type_of_location = get_object_or_404(Location, name=type_of_location)
         if poster:
             event.poster = poster
         if image1:

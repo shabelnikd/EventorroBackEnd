@@ -16,10 +16,6 @@ link = settings.LINK
 
 
 class EventListSerializer(serializers.ModelSerializer):
-    # audience = ChoiceListField(choices=Event.AUDIENCE_CHOICES)
-    # age_limits = ChoiceListField(choices=Event.AGE)
-    # type_of_location = ChoiceListField(choices=Event.PLACES)
-    # type_of_location2 = ChoiceListField(choices=Event.PLACES)
 
     class Meta:
         model = Event
@@ -43,6 +39,9 @@ class EventListSerializer(serializers.ModelSerializer):
         repr['images'] = images
         repr['categories'] = EventCategorySerializer(instance.categories, many=True).data
         repr['event_dates'] = EventDateListSerializer(instance.event_dates.exclude(status=True).order_by('date_time'), many=True).data
+        repr['audience'] = instance.audience.name
+        repr['type_of_location'] = instance.type_of_location.name
+        repr['age_limits'] = instance.age_limits.name
         repr['author'] = instance.author.email
         repr['tickets_number'] = instance.tickets_number
         repr['ticket_users'] = TicketSerializer(instance.tickets, many=True).data

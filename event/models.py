@@ -1,7 +1,27 @@
 from django.db import models
 from category.models import Category
 from account.models import User
+    
 
+class AgeLimit(models.Model):
+    name = models.CharField(max_length=200)
+
+    def __str__(self) -> str:
+        return self.name
+
+
+class Audience(models.Model):
+    name = models.CharField(max_length=200)
+
+    def __str__(self) -> str:
+        return self.name
+
+
+class Location(models.Model):
+    name = models.CharField(max_length=300)
+
+    def __str__(self) -> str:
+        return self.name
 
 class Event(models.Model):
     PLACES = (
@@ -44,13 +64,12 @@ class Event(models.Model):
     name = models.CharField(max_length=200)
     poster = models.ImageField(upload_to='media/')
     categories = models.ManyToManyField(Category, related_name='events')
-    audience = models.CharField(max_length=50, choices=AUDIENCE_CHOICES)
-    age_limits = models.CharField(max_length=50, choices=AGE)
+    audience = models.ForeignKey(Audience, on_delete=models.CASCADE, related_name='audiences')
+    age_limits = models.ForeignKey(AgeLimit, on_delete=models.CASCADE, related_name='age_limit')
     price = models.DecimalField(max_digits=15, decimal_places=2)
     video = models.CharField(max_length=200)
     description = models.TextField()
-    type_of_location = models.CharField(max_length=200, choices=PLACES)
-    type_of_location2 = models.CharField(max_length=200, choices=PLACES, null=True, blank=True)
+    type_of_location = models.ForeignKey(Location, on_delete=models.CASCADE, related_name='types_of_location')
     tickets_number = models.IntegerField(null=True, blank=True)
     location_link = models.CharField(max_length=200)
     image1 = models.ImageField(upload_to='media/', null=True, blank=True)
@@ -79,9 +98,10 @@ class Favorite(models.Model):
     def __str__(self):
         return f'{self.user.email} -> {self.event.name}'
 
+
 class Ticket(models.Model):
-    user = models.ForeignKey(User, related_name='tickets', on_delete=models.SET_NULL, null=True)
-    event = models.ForeignKey(Event, related_name='tickets', on_delete=models.SET_NULL, null=True)
+    user = models.ForeignKey(User, related_name='tickets', on_delete=models.CASCADE)
+    event = models.ForeignKey(Event, related_name='tickets', on_delete=models.CASCADE)
 
     def __str__(self):
         if self.user:
