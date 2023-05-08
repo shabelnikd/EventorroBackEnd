@@ -9,6 +9,7 @@ from rest_framework.decorators import action
 from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
 from .models import Event, EventDate, Favorite, Ticket, Audience, Location, AgeLimit
+from rest_framework.generics import ListAPIView
 from rest_framework import status, mixins
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
@@ -252,3 +253,17 @@ class EventViewSet(mixins.RetrieveModelMixin,
         send_mails.send_guest_mail(user=user, event=event)
         send_mails.send_host_mail(user, event)
         return Response('Сохранено', status=201)
+
+class AudienceListView(ListAPIView):
+    queryset = Audience.objects.all()
+    serializer_class = serializers.AudienceSerializer
+
+
+class AgeLimitsListView(ListAPIView):
+    queryset = AgeLimit.objects.all()
+    serializer_class = serializers.AgeLimitsSerializer
+
+
+class LocationListView(ListAPIView):
+    queryset = Location.objects.all()
+    serializer_class = serializers.LocationSerializer

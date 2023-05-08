@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Event, EventDate, Ticket
+from .models import Event, EventDate, Ticket, AgeLimit, Audience, Location
 from category.models import Category
 from django.conf import settings
 
@@ -85,4 +85,19 @@ class EventSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
     
-    
+class AgeLimitsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AgeLimit
+        fields = '__all__'
+
+
+class LocationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Location
+        fields = '__all__'
+
+
+class AudienceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Audience
+        fields = '__all__'
