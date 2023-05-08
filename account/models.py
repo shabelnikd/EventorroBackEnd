@@ -63,19 +63,6 @@ class User(AbstractBaseUser):
     def has_perm(self, perm, obj=None):
         return self.is_staff
 
-    def send_activation_mail(self):
-        activation_url = f'{settings.LINK}/api/v1/accounts/activate/{self.activation_code}'
-        message = f"""
-            Вы успешно зарегистрировались!
-            Активируйте ваш аккаунт {activation_url}
-        """
-        send_mail('Активация аккаунта',
-            message,
-            'eventorro@gmail.com',
-            [self.email, ]
-        )
-
-
     @property
     def token(self):
         return self._generate_jwt_token()

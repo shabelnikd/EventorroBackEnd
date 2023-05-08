@@ -48,6 +48,8 @@ class TicketSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         rep = super().to_representation(instance)
         rep['event'] = instance.event.name
+        if instance.event.author.organization_name:
+            rep['organization'] = instance.event.author.organization_name
         rep['name'] = instance.user.name
         rep['last_name'] = instance.user.last_name
         rep['email'] = instance.user.email

@@ -124,7 +124,9 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+# LANGUAGE_CODE = 'ru'
+
+TIME_ZONE = 'Asia/Bishkek'
 
 USE_I18N = True
 
@@ -210,3 +212,7 @@ EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 
 CSRF_TRUSTED_ORIGINS=['https://afiche-production.up.railway.app',
     'https://eventorro.live',]
+
+
+CELERY_BROKER_URL = config('CELERY_BROKER_URL')
+CELERY_RESULT_BACKEND = config('CELERY_RESULT_BACKEND')

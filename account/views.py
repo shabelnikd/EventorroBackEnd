@@ -11,8 +11,7 @@ from drf_yasg.utils import swagger_auto_schema
 from .permissions import IsAuthor
 from django.shortcuts import get_object_or_404, redirect
 from .models import User
-from django.conf import settings
-
+from .tasks import send_reset_email
 
 class RegistrationView(APIView):
     @swagger_auto_schema(request_body=RegisterSerializer())
@@ -41,7 +40,8 @@ class ResetPasswordView(APIView):
     def post(self, request):
         serializer = ForgotPasswordSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
-            serializer.send_reset_email()
+            email = serializer.validated_data.get('email')
+            send_reset_email(email)
             return Response('Код для восстановления пароля был выслан вам на почту', status=status.HTTP_200_OK)
 
 

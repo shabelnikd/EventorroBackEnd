@@ -33,8 +33,10 @@ ENV DB_HOST=containers-us-west-127.railway.app
 ENV DB_PORT=5527
 ENV DOMAIN=https://afiche-production.up.railway.app
 ENV LINK=https://afiche-production.up.railway.app/media
+ENV CELERY_BROKER_URL=redis://default:ZIe99V0FNdk6NM117Vuu@containers-us-west-135.railway.app:7836
+ENV CELERY_RESULT_BACKEND=redis://default:ZIe99V0FNdk6NM117Vuu@containers-us-west-135.railway.app:7836
 
 RUN python3 manage.py migrate 
 RUN python3 manage.py collectstatic 
 
-CMD gunicorn --bind 0.0.0.0:8000 afiche.wsgi:application
+CMD gunicorn --bind 0.0.0.0:8000 afiche.wsgi:application && celery -A afiche worker --loglevel=info -B

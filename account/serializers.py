@@ -5,6 +5,7 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from event.serializers import EventListSerializer, TicketSerializer
 from event.models import Favorite, Event, Ticket
 from django.conf import settings
+from .tasks import send_activation_mail
 
 
 LINK = settings.LINK
@@ -37,7 +38,7 @@ class RegisterSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         user = User.objects.create_user(**validated_data)
         user.create_activation_code()
-        user.send_activation_mail()
+        send_activation_mail(user.email, user.activation_code)
         return user
 
 
@@ -80,18 +81,6 @@ class ForgotPasswordSerializer(serializers.Serializer):
             raise serializers.ValidationError('Такого пользователя не существует')
         return email
 
-    def send_reset_email(self):
-        email = self.validated_data.get('email')
-        user = User.objects.get(email=email)
-        user.create_activation_code()
-        message = f"Код для восстановления пароля {user.activation_code}"
-        send_mail(
-            'Восстановление пароля',
-            message,
-            'eventorro@gmail.com',
-            [email]
-        )
-
 
 class CreateNewPasswordSerializer(serializers.Serializer):
     activation_code = serializers.CharField(required=True)
@@ -115,8 +104,9 @@ class CreateNewPasswordSerializer(serializers.Serializer):
         password = self.validated_data.get('password')
         user = User.objects.get(activation_code=code)
         user.set_password(password)
+        user.activation_code = ''
         user.save()
-    
+
 
 class ChangePasswordSerializer(serializers.ModelSerializer):
     password_confirm = serializers.CharField(min_length=4, required=True)
