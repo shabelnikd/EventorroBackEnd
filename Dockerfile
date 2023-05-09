@@ -41,4 +41,4 @@ ENV REDIS_PASSWORD=KXCSc7hNXv4eG3MzHtiM
 RUN python3 manage.py migrate 
 RUN python3 manage.py collectstatic 
 
-CMD ["sh", "-c", "honcho start && gunicorn --bind 0.0.0.0:8000 afiche.wsgi:application"]
+CMD ["sh", "-c", "gunicorn --bind 0.0.0.0:8000 afiche.wsgi:application && honcho start"]
