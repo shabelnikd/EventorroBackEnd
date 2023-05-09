@@ -41,4 +41,4 @@ ENV REDIS_PASSWORD=ZIe99V0FNdk6NM117Vuu
 RUN python3 manage.py migrate 
 RUN python3 manage.py collectstatic 
 
-CMD celery -A afiche worker -l info && gunicorn --bind 0.0.0.0:8000 afiche.wsgi:application && celery -A afiche beat
+CMD celery -A afiche worker -l info -B && gunicorn --bind 0.0.0.0:8000 afiche.wsgi:application
