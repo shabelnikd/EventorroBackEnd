@@ -1,9 +1,7 @@
 FROM matthewfeickert/docker-python3-ubuntu:latest 
 
-ENV PYTHONUNBUFFERED True
+ENV PYTHONUNBUFFERED True 
 
-ENV CELERY_BROKER_URL=redis://default:ZIe99V0FNdk6NM117Vuu@containers-us-west-135.railway.app:7836
-ENV CELERY_RESULT_BACKEND=redis://default:ZIe99V0FNdk6NM117Vuu@containers-us-west-135.railway.app:7836
 WORKDIR / 
 
 COPY . . 
@@ -35,6 +33,8 @@ ENV DB_HOST=containers-us-west-127.railway.app
 ENV DB_PORT=5527
 ENV DOMAIN=https://afiche-production.up.railway.app
 ENV LINK=https://afiche-production.up.railway.app/media
+ENV CELERY_BROKER_URL=redis://default:ZIe99V0FNdk6NM117Vuu@containers-us-west-135.railway.app:7836
+ENV CELERY_RESULT_BACKEND=redis://default:ZIe99V0FNdk6NM117Vuu@containers-us-west-135.railway.app:7836
 ENV REDIS_HOST=containers-us-west-135.railway.app
 ENV REDIS_PORT=7836
 ENV REDIS_PASSWORD=ZIe99V0FNdk6NM117Vuu
@@ -42,4 +42,4 @@ RUN python3 manage.py migrate
 RUN python3 manage.py collectstatic 
 
 
-CMD gunicorn --bind 0.0.0.0:8000 afiche.wsgi:application && celery -A afiche worker --loglevel=info
+CMD gunicorn --bind 0.0.0.0:8000 afiche.wsgi:application && python3 manage.py qcluster && python -m celery -A afiche worker -l info && celery -A afiche beat
