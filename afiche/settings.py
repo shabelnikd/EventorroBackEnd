@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'django_filters',
     'rest_framework',
     'rest_framework.authtoken',
+    'q',
     'account',
     'category',
     'event',
@@ -193,6 +194,25 @@ SWAGGER_SETTINGS = {
         }
     }
 }
+
+
+Q_CLUSTER = {
+    'name': 'MyCluster',
+    'workers': 4,
+    'timeout': 90,
+    'retry': 300,
+    'queue_limit': 50,
+    'bulk': 10,
+    'orm': 'default',
+    'redis': {
+        'host': config('REDIS_HOST'),
+        'port': config('REDIS_PORT'),
+        'password': config('REDIS_PASSWORD'),
+        'db': 0,
+        'socket_timeout': 5,
+    },
+}
+
 
 LOGIN_URL='/api/v1/account/login/'
 LOGOUT_REDIRECT_URL='/api/v1/docs/'
