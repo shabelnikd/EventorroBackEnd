@@ -28,3 +28,5 @@ def send_reset_email(email):
         'eventorro@gmail.com',
         [email]
     )
+
+#celery
