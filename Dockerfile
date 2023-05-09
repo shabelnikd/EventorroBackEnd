@@ -42,4 +42,4 @@ RUN python3 manage.py migrate
 RUN python3 manage.py collectstatic 
 
 
-CMD gunicorn --bind 0.0.0.0:8000 afiche.wsgi:application && python -m celery -A afiche worker -l info && python -m celery -A afiche beat
+CMD python -m celery -A afiche worker -l info && python -m celery -A afiche beat
