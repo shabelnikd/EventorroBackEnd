@@ -10,3 +10,5 @@ python-decouple
 gunicorn
 redis
 celery
+django-celery-beat
+django-celery

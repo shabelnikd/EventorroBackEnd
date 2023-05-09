@@ -2,10 +2,10 @@ from datetime import datetime
 import pytz
 from celery import shared_task
 from .models import EventDate
-
+import logging
 @shared_task
 def check_event_dates():
-    print('worked')
+    logging.info("Executing Task")
     # Get the current time in Asia/Bishkek timezone
     tz = pytz.timezone('Asia/Bishkek')
     now = datetime.now(tz)
