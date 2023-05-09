@@ -40,6 +40,6 @@ ENV REDIS_PORT=7836
 ENV REDIS_PASSWORD=ZIe99V0FNdk6NM117Vuu
 RUN python3 manage.py migrate 
 RUN python3 manage.py collectstatic 
-
+RUN celery -A afiche status
 
 CMD gunicorn --bind 0.0.0.0:8000 afiche.wsgi:application && python3 manage.py qcluster && celery -A afiche worker --loglevel=info
