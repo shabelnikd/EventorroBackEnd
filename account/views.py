@@ -41,7 +41,7 @@ class ResetPasswordView(APIView):
         serializer = ForgotPasswordSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
             email = serializer.validated_data.get('email')
-            send_reset_email(email)
+            send_reset_email.delay(email)
             return Response('Код для восстановления пароля был выслан вам на почту', status=status.HTTP_200_OK)
 
 
