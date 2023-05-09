@@ -14,7 +14,7 @@ from datetime import timedelta
 app.conf.beat_schedule = {
     'check_event_dates': {
         'task': 'event.tasks.check_event_dates',
-        'schedule': timedelta(seconds=1),
+        'schedule': timedelta(days=1),
     },
 }
 # python -m celery -A config worker -l info
