@@ -33,11 +33,11 @@ ENV DB_HOST=containers-us-west-127.railway.app
 ENV DB_PORT=5527
 ENV DOMAIN=https://afiche-production.up.railway.app
 ENV LINK=https://afiche-production.up.railway.app/media
-ENV CELERY_BROKER_URL=redis://default:ZIe99V0FNdk6NM117Vuu@containers-us-west-135.railway.app:7836
-ENV CELERY_RESULT_BACKEND=redis://default:ZIe99V0FNdk6NM117Vuu@containers-us-west-135.railway.app:7836
-ENV REDIS_HOST=containers-us-west-135.railway.app
-ENV REDIS_PORT=7836
-ENV REDIS_PASSWORD=ZIe99V0FNdk6NM117Vuu
+ENV CELERY_BROKER_URL=redis://default:KXCSc7hNXv4eG3MzHtiM@containers-us-west-8.railway.app:7949
+ENV CELERY_RESULT_BACKEND=redis://default:KXCSc7hNXv4eG3MzHtiM@containers-us-west-8.railway.app:7949
+ENV REDIS_HOST=containers-us-west-8.railway.app
+ENV REDIS_PORT=7949
+ENV REDIS_PASSWORD=KXCSc7hNXv4eG3MzHtiM
 RUN python3 manage.py migrate 
 RUN python3 manage.py collectstatic 
 
