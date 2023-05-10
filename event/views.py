@@ -64,17 +64,19 @@ class EventViewSet(mixins.RetrieveModelMixin,
         if category_ids:
             filters &= Q(categories__id__in=category_ids)
         if audience:
-            filters &= Q(audience__id=audience)
+            filters &= Q(audience__name=audience)
         if age_limits:
-            filters &= Q(age_limits__id=age_limits)
+            if age_limits.isdigit():
+                age_limits += '+'
+            filters &= Q(age_limits__name=age_limits)
         if type_of_location:
-            filters &= Q(type_of_location__id=type_of_location)
+            filters &= Q(type_of_location__name=type_of_location)
         if price_from and price_to:
-            filters &= Q(price__range=(price_from, price_to))
+            filters &= Q(price_from__lte=price_from, price_to__lte=price_to)
         elif price_from:
-            filters &= Q(price__range=(price_from, 1_000_000))
+            filters &= Q(price_from__lte=price_from)
         elif price_to:
-            filters &= Q(price__range=(0, price_to))
+            filters &= Q(price_to__lte=price_to)
 
         # Apply filters to queryset
         queryset = queryset.filter(filters)
@@ -92,10 +94,13 @@ class EventViewSet(mixins.RetrieveModelMixin,
 
     ])
     def list(self, request, *args, **kwargs):
-        queryset = sorted(self.get_queryset(), 
-            key=lambda x: x.event_dates.filter(
-            id__in=EventDate.objects.filter(status=False)
-            ).first().date_time)
+        try:
+            queryset = sorted(self.get_queryset(), 
+                key=lambda x: x.event_dates.filter(
+                id__in=EventDate.objects.filter(status=False)
+                ).first().date_time)
+        except:
+            queryset = []
         page = self.paginate_queryset(queryset)
         if page:
             serializer = self.get_serializer(page, many=True)
@@ -128,9 +133,11 @@ class EventViewSet(mixins.RetrieveModelMixin,
         type_of_location = request.data.get('type_of_location')
         poster = request.data.get('poster')
         tickets_number = request.data.get('tickets_number')
+        price_from = request.data.get('price_from') 
+        price_to = request.data.get('price_to')
 
 
-        event = Event.objects.create(name=name, description=description, price=price, video=video, location_link=location_link, age_limits=get_object_or_404(AgeLimit, name=age_limits),  audience=get_object_or_404(Audience, name=audience), author_id=author, poster=poster, image1=image1, image2=image2, image3=image3, image4=image4, image5=image5, type_of_location=get_object_or_404(Location, name=type_of_location), tickets_number=tickets_number)
+        event = Event.objects.create(name=name, description=description, price=price, video=video, location_link=location_link, age_limits=get_object_or_404(AgeLimit, name=age_limits),  audience=get_object_or_404(Audience, name=audience), author_id=author, poster=poster, image1=image1, image2=image2, image3=image3, image4=image4, image5=image5, type_of_location=get_object_or_404(Location, name=type_of_location), tickets_number=tickets_number, price_from=price_from, price_to=price_to)
 
         if request.POST.getlist('categories[]'):
             categories = request.POST.getlist('categories[]')
@@ -171,6 +178,8 @@ class EventViewSet(mixins.RetrieveModelMixin,
         type_of_location = request.data.get('type_of_location')
         poster = request.data.get('poster')
         tickets_number = request.data.get('tickets_number')
+        price_from = request.data.get('price_from') 
+        price_to = request.data.get('price_to')
 
         event.name = name
         event.description = description
@@ -193,6 +202,10 @@ class EventViewSet(mixins.RetrieveModelMixin,
         if image5:        
             event.image5 = image5
         event.tickets_number = tickets_number
+        if price_from:
+            event.price_from = price_from
+        if price_to:
+            event.price_to = price_to
         event.save()
 
         # Update EventDates objects
