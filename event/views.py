@@ -120,7 +120,6 @@ class EventViewSet(mixins.RetrieveModelMixin,
         name = request.data.get('name')
         author = request.user.id
         description = request.data.get('description')
-        price = request.data.get('price')
         video = request.data.get('video')
         image1 = request.data.get('image1')
         image2 = request.data.get('image2')
@@ -135,9 +134,9 @@ class EventViewSet(mixins.RetrieveModelMixin,
         tickets_number = request.data.get('tickets_number')
         price_from = request.data.get('price_from') 
         price_to = request.data.get('price_to')
+        location_name = request.data.get('location_name')
 
-
-        event = Event.objects.create(name=name, description=description, price=price, video=video, location_link=location_link, age_limits=get_object_or_404(AgeLimit, name=age_limits),  audience=get_object_or_404(Audience, name=audience), author_id=author, poster=poster, image1=image1, image2=image2, image3=image3, image4=image4, image5=image5, type_of_location=get_object_or_404(Location, name=type_of_location), tickets_number=tickets_number, price_from=price_from, price_to=price_to)
+        event = Event.objects.create(name=name, description=description, video=video, location_link=location_link, age_limits=get_object_or_404(AgeLimit, name=age_limits),  audience=get_object_or_404(Audience, name=audience), author_id=author, poster=poster, image1=image1, image2=image2, image3=image3, image4=image4, image5=image5,location_name=location_name, type_of_location=get_object_or_404(Location, name=type_of_location), tickets_number=tickets_number, price_from=price_from, price_to=price_to, )
 
         if request.POST.getlist('categories[]'):
             categories = request.POST.getlist('categories[]')
@@ -165,7 +164,6 @@ class EventViewSet(mixins.RetrieveModelMixin,
 
         name = request.data.get('name')
         description = request.data.get('description')
-        price = request.data.get('price')
         video = request.data.get('video')
         image1 = request.data.get('image1')
         image2 = request.data.get('image2')
@@ -180,12 +178,18 @@ class EventViewSet(mixins.RetrieveModelMixin,
         tickets_number = request.data.get('tickets_number')
         price_from = request.data.get('price_from') 
         price_to = request.data.get('price_to')
+        location_name = request.data.get('location_name')
 
-        event.name = name
-        event.description = description
-        event.price = price
-        event.video = video
-        event.location_link = location_link
+        if name:
+            event.name = name
+        if description:
+            event.description = description
+        if video:
+            event.video = video
+        if location_link:
+            event.location_link = location_link
+        if location_name:
+            event.location_name = location_name
         event.age_limits = get_object_or_404(AgeLimit, name=age_limits)
         event.audience = get_object_or_404(Audience, name=audience)
         event.type_of_location = get_object_or_404(Location, name=type_of_location)
