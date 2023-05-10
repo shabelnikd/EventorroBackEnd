@@ -124,7 +124,9 @@ ipython_config.py
 
 # PEP 582; used by e.g. github.com/David-OConnor/pyflow and github.com/pdm-project/pdm
 __pypackages__/
-
+.media/
+media/
+media
 # Celery stuff
 celerybeat-schedule
 celerybeat.pid
