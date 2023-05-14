@@ -105,10 +105,9 @@ class EventViewSet(mixins.RetrieveModelMixin,
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
     
-    # def get_object(self, queryset=None):
-    #     event_name = self.kwargs.get(self.lookup_url_kwarg)  # retrieve the value of the 'event_id' keyword argument
-    #     obj = get_object_or_404(Event, name=event_name)  # retrieve the Event object with the specified ID
-    #     return obj
+    def get_object(self):
+        obj = Event.objects.get(id=self.kwargs.get('pk')[0])
+        return obj
 
     @action(detail=False, methods=['post'])
     @swagger_auto_schema(request_body=serializers.EventSerializer())
