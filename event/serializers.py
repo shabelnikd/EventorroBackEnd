@@ -50,6 +50,7 @@ class TicketSerializer(serializers.ModelSerializer):
         rep['event'] = instance.event.name
         if instance.event.author.organization_name:
             rep['organization'] = instance.event.author.organization_name
+        rep['user_id'] = instance.user.id
         rep['name'] = instance.user.name
         rep['last_name'] = instance.user.last_name
         rep['email'] = instance.user.email

@@ -63,6 +63,7 @@ class LoginSerializer(TokenObtainPairSerializer):
             refresh = self.get_token(user)
             attrs['refresh'] = str(refresh)
             attrs['access'] = str(refresh.access_token)
+        attrs['user_id'] = user.id
         attrs['is_guest'] = user.is_guest
         attrs['is_host'] = user.is_host
         attrs['last_name'] = user.last_name
@@ -146,6 +147,7 @@ class UserHostDetailsSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         rep = super().to_representation(instance)
+        rep['user_id'] = instance.id
         rep['events_by_user'] = EventListSerializer(instance.events.all(), many=True).data
         rep['phone'] = instance.phone
         if instance.avatar:
@@ -170,6 +172,7 @@ class UserGuestDetailsSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         rep = super().to_representation(instance)
+        rep['user_id'] = instance.id
         try:
             rep.pop('organization_name')
         except:

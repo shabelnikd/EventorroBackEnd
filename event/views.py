@@ -94,9 +94,9 @@ class EventViewSet(mixins.RetrieveModelMixin,
 
     ])
     def list(self, request, *args, **kwargs):
-        queryset = sorted(self.get_queryset(), key=lambda x: (
+        queryset = sorted(list(set(self.get_queryset())), key=lambda x: (
             x.event_dates.filter(id__in=EventDate.objects.filter(status=False))
-            .first().date_time))
+            .earliest('date_time').date_time))
         # page = self.paginate_queryset(queryset)
         # if page:
             # serializer = self.get_serializer(page, many=True)
