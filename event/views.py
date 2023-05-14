@@ -42,7 +42,7 @@ class EventViewSet(mixins.RetrieveModelMixin,
 
 
     def get_queryset(self):
-        queryset = Event.objects.all()
+        queryset = Event.objects.filter(event_dates__status=False)
         audience = self.request.query_params.get('audience')
         age_limits = self.request.query_params.get('age_limits')
         type_of_location = self.request.query_params.get('type_of_location')
@@ -94,13 +94,9 @@ class EventViewSet(mixins.RetrieveModelMixin,
 
     ])
     def list(self, request, *args, **kwargs):
-        try:
-            queryset = sorted(self.get_queryset(), 
-                key=lambda x: x.event_dates.filter(
-                id__in=EventDate.objects.filter(status=False)
-                ).first().date_time)
-        except:
-            queryset = []
+        queryset = sorted(self.get_queryset(), key=lambda x: (
+            x.event_dates.filter(id__in=EventDate.objects.filter(status=False))
+            .first().date_time))
         page = self.paginate_queryset(queryset)
         if page:
             serializer = self.get_serializer(page, many=True)
