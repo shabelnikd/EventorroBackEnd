@@ -97,10 +97,10 @@ class EventViewSet(mixins.RetrieveModelMixin,
         queryset = sorted(self.get_queryset(), key=lambda x: (
             x.event_dates.filter(id__in=EventDate.objects.filter(status=False))
             .first().date_time))
-        page = self.paginate_queryset(queryset)
-        if page:
-            serializer = self.get_serializer(page, many=True)
-            return self.get_paginated_response(serializer.data)
+        # page = self.paginate_queryset(queryset)
+        # if page:
+            # serializer = self.get_serializer(page, many=True)
+            # return self.get_paginated_response(serializer.data)
 
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
