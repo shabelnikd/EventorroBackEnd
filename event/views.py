@@ -105,9 +105,17 @@ class EventViewSet(mixins.RetrieveModelMixin,
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
     
-    def get_object(self):
-        obj = Event.objects.get(id=self.kwargs.get('pk')[0])
-        return obj
+    # def retrieve(self):
+    #     obj = Event.objects.get(id=self.kwargs.get('pk'))
+    #     return obj
+    def retrieve(self, request, *args, **kwargs):
+        try:
+            obj = Event.objects.get(id=kwargs.get('pk'))
+            print(obj)
+            return Response(serializers.EventListSerializer(obj).data)
+        except:
+            return Response('Not Found', status=404)
+
 
     @action(detail=False, methods=['post'])
     @swagger_auto_schema(request_body=serializers.EventSerializer())
