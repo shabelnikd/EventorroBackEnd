@@ -15,6 +15,7 @@ from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 from django.db.models import Q
 from .extra import send_mails
+from .models import Category
 
 
 
@@ -111,10 +112,10 @@ class EventViewSet(mixins.RetrieveModelMixin,
     def retrieve(self, request, *args, **kwargs):
         try:
             obj = Event.objects.get(id=kwargs.get('pk'))
-            print(obj)
             return Response(serializers.EventListSerializer(obj).data)
         except:
             return Response('Not Found', status=404)
+    
 
 
     @action(detail=False, methods=['post'])
@@ -144,7 +145,7 @@ class EventViewSet(mixins.RetrieveModelMixin,
         if request.POST.getlist('categories[]'):
             categories = request.POST.getlist('categories[]')
             for cat in categories:
-                event.categories.add(cat)
+                event.categories.add(get_object_or_404(Category, name=cat))
 
         # Create EventDate objects
         if request.POST.getlist('event_dates[]'): #[{"date_time": "2020-05"}]
@@ -159,9 +160,9 @@ class EventViewSet(mixins.RetrieveModelMixin,
 
     @action(detail=True, methods=['put'])
     def update_event(self, request, pk=None):
-        self.check_object_permissions(request, self.get_object())
         try:
-            event = self.get_queryset().get(pk=pk)
+            self.check_object_permissions(request, Event.objects.get(pk=pk))
+            event = Event.objects.get(pk=pk)
         except Event.DoesNotExist:
             return Response({'error': 'Event does not exist.'}, status=status.HTTP_404_NOT_FOUND)
 
@@ -224,16 +225,16 @@ class EventViewSet(mixins.RetrieveModelMixin,
 
         if request.POST.getlist('categories[]'):
             categories = request.POST.getlist('categories[]')
-            event.categories.all().delete()
+            event.categories.clear()
             for cat in categories:
-                event.categories.add(cat)
+                event.categories.add(get_object_or_404(Category, name=cat))
         return Response(serializers.EventListSerializer(event).data)
 
     @action(detail=True, methods=['delete'])
     def delete_event(self, request, pk=None):
-        self.check_object_permissions(request, self.get_object())
         try:
-            event = self.get_queryset().get(pk=pk)
+            event = Event.objects.get(pk=pk)
+            self.check_object_permissions(request, event)
             event.delete()
             return Response({'success': 'Event deleted successfully.'}, status=status.HTTP_204_NO_CONTENT)
         except Event.DoesNotExist:
