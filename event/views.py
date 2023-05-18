@@ -63,7 +63,7 @@ class EventViewSet(mixins.RetrieveModelMixin,
         filters = Q()
         category_ids = self.request.query_params.getlist('category', [])
         if category_ids:
-            filters &= Q(categories__id__in=category_ids)
+            filters &= Q(categories__name__in=category_ids)
         if audience:
             filters &= Q(audience__name=audience)
         if age_limits:
