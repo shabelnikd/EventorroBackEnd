@@ -163,6 +163,7 @@ CORS_ALLOWED_ORIGINS = [
     'https://www.thunderclient.com',
     'https://afiche-production.up.railway.app',
     'https://eventorro.live',
+    'http://34.72.216.180',
 ]
 
 CORS_ORIGIN_WHITELIST = [
@@ -173,6 +174,7 @@ CORS_ORIGIN_WHITELIST = [
     'https://www.thunderclient.com',
     'https://afiche-production.up.railway.app',
     'https://eventorro.live',
+    'http://34.72.216.180',
 
 ]
 
@@ -230,7 +232,7 @@ EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 
 
 CSRF_TRUSTED_ORIGINS=['https://afiche-production.up.railway.app',
-    'https://eventorro.live',]
+    'https://eventorro.live', 'http://34.72.216.180']
 
 
 CELERY_BROKER_URL = config('CELERY_BROKER_URL')

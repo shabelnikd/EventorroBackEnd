@@ -28,7 +28,7 @@ class ActivationView(APIView):
         user.activation_code = ''
         user.is_active = True
         user.save()
-        return redirect('https://eventorro.live/')
+        return redirect('http://34.72.216.180/')
 
 class LoginView(TokenObtainPairView):
     permission_classes = [AllowAny, ]
