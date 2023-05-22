@@ -154,29 +154,29 @@ REST_FRAMEWORK = {
 
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
-# CORS_ORIGIN_ALLOW_ALL = True
-CORS_ALLOWED_ORIGINS = [
-    'http://localhost:3000',
-    'http://localhost:3001', 
-    'http://127.0.0.1:3000',
-    'http://127.0.0.1:3001', 
-    'https://www.thunderclient.com',
-    'https://afiche-production.up.railway.app',
-    'https://eventorro.live',
-    'http://34.72.216.180',
-]
+CORS_ORIGIN_ALLOW_ALL = True
+# CORS_ALLOWED_ORIGINS = [
+#     'http://localhost:3000',
+#     'http://localhost:3001', 
+#     'http://127.0.0.1:3000',
+#     'http://127.0.0.1:3001', 
+#     'https://www.thunderclient.com',
+#     'https://afiche-production.up.railway.app',
+#     'https://eventorro.live',
+#     'http://34.72.216.180',
+# ]
 
-CORS_ORIGIN_WHITELIST = [
-    'http://localhost:3000',
-    'http://localhost:3001', 
-    'http://127.0.0.1:3000',
-    'http://127.0.0.1:3001', 
-    'https://www.thunderclient.com',
-    'https://afiche-production.up.railway.app',
-    'https://eventorro.live',
-    'http://34.72.216.180',
+# CORS_ORIGIN_WHITELIST = [
+#     'http://localhost:3000',
+#     'http://localhost:3001', 
+#     'http://127.0.0.1:3000',
+#     'http://127.0.0.1:3001', 
+#     'https://www.thunderclient.com',
+#     'https://afiche-production.up.railway.app',
+#     'https://eventorro.live',
+#     'http://34.72.216.180',
 
-]
+# ]
 
 from datetime import timedelta
 SIMPLE_JWT = {
