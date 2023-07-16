@@ -31,7 +31,7 @@ class EventListSerializer(serializers.ModelSerializer):
         repr['author'] = instance.author.email
         repr['tickets_number'] = instance.tickets_number
         repr['ticket_users'] = TicketSerializer(instance.tickets, many=True).data
-        repr['poster'] = instance.get_image_url('poster')
+        repr['poster'] = f"{settings.LINK}{instance.get_image_url('poster')}"
         return repr
 
     
