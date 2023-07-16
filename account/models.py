@@ -77,3 +77,9 @@ class User(AbstractBaseUser):
         }, settings.SECRET_KEY, algorithm='HS256')
 
         return token.decode('utf-8')
+
+    def get_avatar_url(self):
+        return self.avatar.url
+
+    def get_poster_url(self):
+        return self.poster.url

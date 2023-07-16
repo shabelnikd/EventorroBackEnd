@@ -49,8 +49,9 @@ INSTALLED_APPS = [
     'account',
     'category',
     'event',
-    # 'tickets',
+
 ]
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -140,7 +141,7 @@ AUTH_USER_MODEL = 'account.User'
 STATIC_URL = 'static/'
 STATIC_ROOT = BASE_DIR / 'static'
 
-MEDIA_URL = 'media/'
+MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
 
@@ -154,74 +155,40 @@ REST_FRAMEWORK = {
 
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
-CORS_ORIGIN_ALLOW_ALL = True
-# CORS_ALLOWED_ORIGINS = [
-#     'http://localhost:3000',
-#     'http://localhost:3001', 
-#     'http://127.0.0.1:3000',
-#     'http://127.0.0.1:3001', 
-#     'https://www.thunderclient.com',
-#     'https://afiche-production.up.railway.app',
-#     'https://eventorro.live',
-#     'http://34.72.216.180',
-# ]
+CORS_ALLOWED_ORIGINS = [
+     'http://localhost:3000',
+     'http://localhost:3001', 
+     'http://127.0.0.1:3000',
+     'http://127.0.0.1:3001', 
+     'https://www.thunderclient.com',
+     'http://185.69.154.245',
+     'https://eventorro.com',
+     'http://185.69.154.20',
+     'https://www.eventorro.com',
+]
 
-# CORS_ORIGIN_WHITELIST = [
-#     'http://localhost:3000',
-#     'http://localhost:3001', 
-#     'http://127.0.0.1:3000',
-#     'http://127.0.0.1:3001', 
-#     'https://www.thunderclient.com',
-#     'https://afiche-production.up.railway.app',
-#     'https://eventorro.live',
-#     'http://34.72.216.180',
-
-# ]
+CORS_ORIGIN_WHITELIST = [
+     'http://localhost:3000',
+     'http://localhost:3001', 
+     'http://127.0.0.1:3000',
+     'http://127.0.0.1:3001', 
+     'https://www.thunderclient.com',
+     'http://185.69.154.245',
+     'https://eventorro.com',
+     'http://185.69.154.20',
+     'http://185.69.154.20/api/v1/docs',
+     'https://www.eventorro.com',
+ ]
 
 from datetime import timedelta
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
-}
-
-
-SWAGGER_SETTINGS = {
-    'SECURITY_DEFINITIONS': {
-        'Bearer': {
-            'type': 'apiKey',
-            'name': 'Authorization',
-            'in': 'header',
-            'scheme': 'https',
-        }
-    }
-}
-
-
-Q_CLUSTER = {
-    'name': 'MyCluster',
-    'workers': 4,
-    'timeout': 90,
-    'retry': 300,
-    'queue_limit': 50,
-    'bulk': 10,
-    'orm': 'default',
-    'redis': {
-        'host': config('REDIS_HOST'),
-        'port': config('REDIS_PORT'),
-        'password': config('REDIS_PASSWORD'),
-        'db': 0,
-        'socket_timeout': 5,
-    },
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=7),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
 }
 
 
 LOGIN_URL='/api/v1/account/login/'
 LOGOUT_REDIRECT_URL='/api/v1/docs/'
-
-# TWILIO_NUMBER = config('TWILIO_PHONE')
-# TWILIO_SID = config('TWILIO_ACCOUNT_SID')
-# TWILIO_AUTH_TOKEN = config('TWILIO_AUTH_TOKEN')
-
 
 EMAIL_BACKEND = config('EMAIL_BACKEND')
 EMAIL_HOST = config('EMAIL_HOST')
@@ -231,8 +198,9 @@ EMAIL_HOST_USER = config('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 
 
-CSRF_TRUSTED_ORIGINS=['https://afiche-production.up.railway.app',
-    'https://eventorro.live', 'http://34.72.216.180']
+CSRF_TRUSTED_ORIGINS=['http://185.69.154.245',
+    'https://www.eventorro.com', 'http://185.69.154.20', 'http://185.69.154.20/api/v1/docs',
+    'https://back.eventorro.com']
 
 
 CELERY_BROKER_URL = config('CELERY_BROKER_URL')

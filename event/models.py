@@ -38,6 +38,7 @@ class Event(models.Model):
     tickets_number = models.IntegerField(null=True, blank=True)
     location_link = models.CharField(max_length=300)
     location_name = models.CharField(max_length=300)
+    event_card_image = models.ImageField(upload_to='media/', null=True, blank=True)
     image1 = models.ImageField(upload_to='media/', null=True, blank=True)
     image2 = models.ImageField(upload_to='media/', null=True, blank=True)
     image3 = models.ImageField(upload_to='media/', null=True, blank=True)
@@ -46,6 +47,10 @@ class Event(models.Model):
 
     def __str__(self) -> str:
         return self.name
+    
+    def get_image_url(self, field_name):
+        image_field = getattr(self, field_name)
+        return image_field.url
 
 
 class EventDate(models.Model):

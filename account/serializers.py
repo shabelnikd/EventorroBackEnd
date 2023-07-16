@@ -69,9 +69,14 @@ class LoginSerializer(TokenObtainPairSerializer):
         attrs['last_name'] = user.last_name
         attrs['name'] = user.name
         if user.is_host:
-            attrs['events'] = EventListSerializer(user.events, many=True).data
+            attrs['events_by_user'] = EventListSerializer(user.events, many=True).data
             attrs['organization_name'] = user.organization_name
+        if user.avatar:
+            attrs['avatar'] = user.get_avatar_url()
+        if user.poster:
+            attrs['poster'] = user.get_poster_url()
         return attrs
+
 
 
 class ForgotPasswordSerializer(serializers.Serializer):
@@ -141,6 +146,7 @@ class FavoriteListSerializer(serializers.ModelSerializer):
 
 
 class UserHostDetailsSerializer(serializers.ModelSerializer):
+    
     class Meta:
         model = User
         fields = ('email', 'name', 'last_name', 'is_host', 'is_guest', 'organization_name', 'phone', 'avatar', 'bio', 'poster')
@@ -161,6 +167,8 @@ class UserHostDetailsSerializer(serializers.ModelSerializer):
         rep['bio'] = instance.bio
         rep['saved'] = FavoriteListSerializer(instance.favorites.all(), many=True).data
         rep['tickets'] = TicketSerializer(instance.tickets.all(), many=True).data
+
+
         return rep
 
 
