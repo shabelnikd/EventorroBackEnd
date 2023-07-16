@@ -21,7 +21,7 @@ class EventListSerializer(serializers.ModelSerializer):
             image_field = getattr(instance, f"image{i}", None)
             if image_field:
                 image_url = instance.get_image_url(f"image{i}")
-                images.append({"image": image_url})
+                images.append({"image": f"{settings.LINK}{image_url}"})
         repr['images'] = images
         repr['categories'] = EventCategorySerializer(instance.categories, many=True).data
         repr['event_dates'] = EventDateListSerializer(instance.event_dates.exclude(status=True).order_by('date_time'), many=True).data
