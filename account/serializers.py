@@ -67,6 +67,7 @@ class LoginSerializer(TokenObtainPairSerializer):
         attrs['is_host'] = user.is_host
         attrs['last_name'] = user.last_name
         attrs['name'] = user.name
+        attrs['bio'] = user.bio
         if user.is_host:
             attrs['events_by_user'] = EventListSerializer(user.events, many=True).data
             attrs['organization_name'] = user.organization_name
