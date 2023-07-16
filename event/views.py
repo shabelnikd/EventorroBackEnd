@@ -139,8 +139,9 @@ class EventViewSet(mixins.RetrieveModelMixin,
         price_from = request.data.get('price_from') 
         price_to = request.data.get('price_to')
         location_name = request.data.get('location_name')
+        event_card_image = request.data.get('event_card_image')
 
-        event = Event.objects.create(name=name, description=description, video=video, location_link=location_link, age_limits=get_object_or_404(AgeLimit, name=age_limits),  audience=get_object_or_404(Audience, name=audience), author_id=author, poster=poster, image1=image1, image2=image2, image3=image3, image4=image4, image5=image5,location_name=location_name, type_of_location=get_object_or_404(Location, name=type_of_location), tickets_number=tickets_number, price_from=price_from, price_to=price_to, )
+        event = Event.objects.create(name=name, description=description, video=video, location_link=location_link, age_limits=get_object_or_404(AgeLimit, name=age_limits),  audience=get_object_or_404(Audience, name=audience), author_id=author, poster=poster, image1=image1, image2=image2, image3=image3, image4=image4, image5=image5,location_name=location_name, type_of_location=get_object_or_404(Location, name=type_of_location), tickets_number=tickets_number, price_from=price_from, price_to=price_to, event_card_image=event_card_image)
 
         if request.POST.getlist('categories[]'):
             categories = request.POST.getlist('categories[]')
@@ -183,6 +184,8 @@ class EventViewSet(mixins.RetrieveModelMixin,
         price_from = request.data.get('price_from') 
         price_to = request.data.get('price_to')
         location_name = request.data.get('location_name')
+        event_card_image = request.data.get('event_card_image')
+
 
         if name:
             event.name = name
@@ -214,6 +217,8 @@ class EventViewSet(mixins.RetrieveModelMixin,
             event.price_from = price_from
         if price_to:
             event.price_to = price_to
+        if event_card_image:
+            event.event_card_image = event_card_image
         event.save()
 
         # Update EventDates objects
