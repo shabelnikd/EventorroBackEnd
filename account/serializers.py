@@ -8,7 +8,6 @@ from django.conf import settings
 from .tasks import send_activation_mail
 
 
-LINK = settings.LINK
 User = get_user_model()
 
 
@@ -72,9 +71,11 @@ class LoginSerializer(TokenObtainPairSerializer):
             attrs['events_by_user'] = EventListSerializer(user.events, many=True).data
             attrs['organization_name'] = user.organization_name
         if user.avatar:
-            attrs['avatar'] = user.get_avatar_url()
+            attrs['avatar'] = f"{settings.LINK}{user.get_avatar_url()}"
         if user.poster:
-            attrs['poster'] = user.get_poster_url()
+            attrs['poster'] = f"{settings.LINK}{user.get_poster_url()}"
+        attrs['saved'] = FavoriteListSerializer(user.favorites.all(), many=True).data
+        attrs['tickets'] = TicketSerializer(user.tickets.all(), many=True).data
         return attrs
 
 
@@ -157,11 +158,11 @@ class UserHostDetailsSerializer(serializers.ModelSerializer):
         rep['events_by_user'] = EventListSerializer(instance.events.all(), many=True).data
         rep['phone'] = instance.phone
         if instance.avatar:
-            rep['avatar'] = f"{LINK}/media/{instance.avatar}"
+            rep['avatar'] = f"{settings.LINK}/media/{instance.avatar}"
         else:
             rep['avatar'] = ""
         if instance.poster:
-            rep['poster'] = f"{LINK}/media/{instance.poster}"
+            rep['poster'] = f"{settings.LINK}/media/{instance.poster}"
         else:
             rep['poster'] = ""
         rep['bio'] = instance.bio
