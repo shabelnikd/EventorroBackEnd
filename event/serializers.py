@@ -32,6 +32,8 @@ class EventListSerializer(serializers.ModelSerializer):
         repr['tickets_number'] = instance.tickets_number
         repr['ticket_users'] = TicketSerializer(instance.tickets, many=True).data
         repr['poster'] = f"{settings.LINK}{instance.get_image_url('poster')}"
+        if instance.event_card_image:
+            repr['event_card_image'] = f"{settings.LINK}{instance.get_image_url('event_card_image')}"    
         return repr
 
     
@@ -81,6 +83,10 @@ class EventSerializer(serializers.ModelSerializer):
     class Meta:
         model = Event
         fields = '__all__'
+
+    def to_representation(self, instance):
+        rep = super().to_representation(instance)
+        rep['event_card_image'] = f"{settings.LINK}{instance.get_image_url('event_card_image')}"
 
     
 class AgeLimitsSerializer(serializers.ModelSerializer):
