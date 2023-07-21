@@ -84,9 +84,6 @@ class EventSerializer(serializers.ModelSerializer):
         model = Event
         fields = '__all__'
 
-    def to_representation(self, instance):
-        rep = super().to_representation(instance)
-        rep['event_card_image'] = f"{settings.LINK}{instance.get_image_url('event_card_image')}"
 
     
 class AgeLimitsSerializer(serializers.ModelSerializer):
