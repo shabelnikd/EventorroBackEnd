@@ -50,12 +50,25 @@ class EventViewSet(mixins.RetrieveModelMixin,
         price_from = self.request.query_params.get('price_from')
         price_to = self.request.query_params.get('price_to')
         date = self.request.query_params.get('date')
+        date_from = self.request.query_params.get('date_from')
+        date_to = self.request.query_params.get('date_to')
 
         if date:
             # Filter events that have an EventDate with the specified date
             queryset = queryset.filter(
                 Q(event_dates__date_time__date=date)
             ).distinct()
+        from datetime import datetime, timedelta
+        if date_from and date_to:
+            date_from = datetime.strptime(date_from, '%Y-%m-%d') + timedelta(days=1)
+            date_to = datetime.strptime(date_to, '%Y-%m-%d') + timedelta(days=1)
+            queryset = queryset.filter(Q(event_dates__date_time__range=(date_from, date_to))).distinct()
+        elif date_from:
+            date_from = datetime.strptime(date_from, '%Y-%m-%d') + timedelta(days=1)
+            queryset = queryset.filter(Q(event_dates__date_time__gte=date_from)).distinct()
+        elif date_to:
+            date_to = datetime.strptime(date_to, '%Y-%m-%d') + timedelta(days=1)
+            queryset = queryset.filter(Q(event_dates__date_time__lte=date_to)).distinct()
         # Use select_related to optimize related object queries
         queryset = queryset.select_related('author')
 
@@ -213,10 +226,8 @@ class EventViewSet(mixins.RetrieveModelMixin,
         if image5:        
             event.image5 = image5
         event.tickets_number = tickets_number
-        if price_from:
-            event.price_from = price_from
-        if price_to:
-            event.price_to = price_to
+        event.price_from = price_from
+        event.price_to = price_to
         if event_card_image:
             event.event_card_image = event_card_image
         event.save()
