@@ -60,11 +60,11 @@ class EventViewSet(mixins.RetrieveModelMixin,
             ).distinct()
         from datetime import datetime, timedelta
         if date_from and date_to:
-            date_from = datetime.strptime(date_from, '%Y-%m-%d') + timedelta(days=1)
+            date_from = datetime.strptime(date_from, '%Y-%m-%d')
             date_to = datetime.strptime(date_to, '%Y-%m-%d') + timedelta(days=1)
             queryset = queryset.filter(Q(event_dates__date_time__range=(date_from, date_to))).distinct()
         elif date_from:
-            date_from = datetime.strptime(date_from, '%Y-%m-%d') + timedelta(days=1)
+            date_from = datetime.strptime(date_from, '%Y-%m-%d')
             queryset = queryset.filter(Q(event_dates__date_time__gte=date_from)).distinct()
         elif date_to:
             date_to = datetime.strptime(date_to, '%Y-%m-%d') + timedelta(days=1)
