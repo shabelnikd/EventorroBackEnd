@@ -37,6 +37,7 @@ class Event(models.Model):
     type_of_location = models.ForeignKey(Location, on_delete=models.CASCADE, related_name='types_of_location')
     tickets_number = models.IntegerField(null=True, blank=True)
     location_link = models.CharField(max_length=300)
+    event_language = models.CharField(max_length=200)
     location_name = models.CharField(max_length=300)
     event_card_image = models.ImageField(upload_to='media/', null=True, blank=True)
     image1 = models.ImageField(upload_to='media/', null=True, blank=True)

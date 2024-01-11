@@ -52,7 +52,7 @@ class EventViewSet(mixins.RetrieveModelMixin,
         date = self.request.query_params.get('date')
         date_from = self.request.query_params.get('date_from')
         date_to = self.request.query_params.get('date_to')
-
+        #event_lang = self.request.query_params.get('event_language')
         if date:
             # Filter events that have an EventDate with the specified date
             queryset = queryset.filter(
@@ -83,6 +83,7 @@ class EventViewSet(mixins.RetrieveModelMixin,
             if age_limits.isdigit():
                 age_limits += '+'
             filters &= Q(age_limits__name=age_limits)
+       # if event_lang = Q(event_language=event_lang)
         if type_of_location:
             filters &= Q(type_of_location__name=type_of_location)
         if price_from and price_to:
@@ -153,8 +154,9 @@ class EventViewSet(mixins.RetrieveModelMixin,
         price_to = request.data.get('price_to')
         location_name = request.data.get('location_name')
         event_card_image = request.data.get('event_card_image')
+        event_language = request.data.get('event_language')
 
-        event = Event.objects.create(name=name, description=description, video=video, location_link=location_link, age_limits=get_object_or_404(AgeLimit, name=age_limits),  audience=get_object_or_404(Audience, name=audience), author_id=author, poster=poster, image1=image1, image2=image2, image3=image3, image4=image4, image5=image5,location_name=location_name, type_of_location=get_object_or_404(Location, name=type_of_location), tickets_number=tickets_number, price_from=price_from, price_to=price_to, event_card_image=event_card_image)
+        event = Event.objects.create(name=name, description=description, video=video, location_link=location_link, age_limits=get_object_or_404(AgeLimit, name=age_limits),  audience=get_object_or_404(Audience, name=audience), author_id=author, poster=poster, image1=image1, image2=image2, image3=image3, image4=image4, image5=image5,location_name=location_name, type_of_location=get_object_or_404(Location, name=type_of_location), tickets_number=tickets_number, price_from=price_from, price_to=price_to, event_card_image=event_card_image, event_language=event_language)
 
         if request.POST.getlist('categories[]'):
             categories = request.POST.getlist('categories[]')
@@ -188,6 +190,7 @@ class EventViewSet(mixins.RetrieveModelMixin,
         image3 = request.data.get('image3')
         image4 = request.data.get('image4')
         image5 = request.data.get('image5')
+        event_language = request.data.get('event_language')
         location_link = request.data.get('location_link')
         age_limits = request.data.get('age_limits')
         audience = request.data.get('audience')
@@ -210,6 +213,8 @@ class EventViewSet(mixins.RetrieveModelMixin,
             event.location_link = location_link
         if location_name:
             event.location_name = location_name
+        if event_language:
+            event.event_language = event_language
         event.age_limits = get_object_or_404(AgeLimit, name=age_limits)
         event.audience = get_object_or_404(Audience, name=audience)
         event.type_of_location = get_object_or_404(Location, name=type_of_location)

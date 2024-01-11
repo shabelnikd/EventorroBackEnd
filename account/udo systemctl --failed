@@ -1,0 +1,92 @@
+[0;1;31m●[0m vps-43684
+    State: [0;1;31mdegraded[0m
+     Jobs: 0 queued
+   Failed: 1 units
+    Since: Tue 2023-07-04 12:58:29 UTC; 5 months 22 days ago
+   CGroup: /
+           ├─user.slice 
+           │ └─user-0.slice 
+           │   ├─session-4795.scope 
+           │   │ ├─[0;38;5;245m3813746 sshd: root@pts/0[0m
+           │   │ ├─[0;38;5;245m3813837 -bash[0m
+           │   │ ├─[0;38;5;245m3814247 sudo systemctl status[0m
+           │   │ ├─[0;38;5;245m3814248 sudo systemctl status[0m
+           │   │ ├─[0;38;5;245m3814249 systemctl status[0m
+           │   │ └─[0;38;5;245m3814250 pager[0m
+           │   └─[0m[0;4muser@0.service[0m [0;1;39m…[0m
+           │     └─init.scope 
+           │       ├─[0;38;5;245m3813749 /lib/systemd/systemd --user[0m
+           │       └─[0;38;5;245m3813750 (sd-pam)[0m
+           ├─init.scope 
+           │ └─[0;38;5;245m1 /lib/systemd/systemd --system --deserialize 60[0m
+           └─system.slice 
+             ├─packagekit.service 
+             │ └─[0;38;5;245m1720 /usr/libexec/packagekitd[0m
+             ├─systemd-networkd.service 
+             │ └─[0;38;5;245m812 /lib/systemd/systemd-networkd[0m
+             ├─systemd-udevd.service 
+             │ └─[0;38;5;245m422 /lib/systemd/systemd-udevd[0m
+             ├─cron.service 
+             │ └─[0;38;5;245m896 /usr/sbin/cron -f -P[0m
+             ├─system-serial\x2dgetty.slice 
+             │ └─serial-getty@ttyS0.service 
+             │   └─[0;38;5;245m955 /sbin/agetty -o -p -- \u --keep-baud 115200,57600,38400,9600 ttyS0 vt220[0m
+             ├─nginx.service 
+             │ ├─[0;38;5;245m 483215 nginx: master process /usr/sbin/nginx -g daemon on; master_process on;[0m
+             │ └─[0;38;5;245m3814165 nginx: worker process[0m
+             ├─polkit.service 
+             │ └─[0;38;5;245m1724 /usr/libexec/polkitd --no-debug[0m
+             ├─networkd-dispatcher.service 
+             │ └─[0;38;5;245m905 /usr/bin/python3 /usr/bin/networkd-dispatcher --run-startup-triggers[0m
+             ├─multipathd.service 
+             │ └─[0;38;5;245m419 /sbin/multipathd -d -s[0m
+             ├─systemd-journald.service 
+             │ └─[0;38;5;245m377 /lib/systemd/systemd-journald[0m
+             ├─unattended-upgrades.service 
+             │ └─[0;38;5;245m968 /usr/bin/python3 /usr/share/unattended-upgrades/unattended-upgrade-shutdown --wait-for-signal[0m
+             ├─ssh.service 
+             │ ├─[0;38;5;245m3628007 sshd: /usr/sbin/sshd -D [listener] 3 of 10-100 startups[0m
+             │ ├─[0;38;5;245m3814115 sshd: [accepted][0m
+             │ ├─[0;38;5;245m3814169 sshd: root [priv][0m
+             │ ├─[0;38;5;245m3814170 sshd: root [net][0m
+             │ ├─[0;38;5;245m3814245 sshd: [accepted][0m
+             │ └─[0;38;5;245m3814246 sshd: [net][0m
+             ├─gunicorn.service 
+             │ ├─[0;38;5;245m483163 /home/eventorro/venv/bin/python3 /home/eventorro/venv/bin/gunicorn --access-logfile - --workers 3 --bind unix:/run/gunicorn.sock afiche.wsgi:application[0m
+             │ ├─[0;38;5;245m483165 /home/eventorro/venv/bin/python3 /home/eventorro/venv/bin/gunicorn --access-logfile - --workers 3 --bind unix:/run/gunicorn.sock afiche.wsgi:application[0m
+             │ ├─[0;38;5;245m483166 /home/eventorro/venv/bin/python3 /home/eventorro/venv/bin/gunicorn --access-logfile - --workers 3 --bind unix:/run/gunicorn.sock afiche.wsgi:application[0m
+             │ └─[0;38;5;245m483167 /home/eventorro/venv/bin/python3 /home/eventorro/venv/bin/gunicorn --access-logfile - --workers 3 --bind unix:/run/gunicorn.sock afiche.wsgi:application[0m
+             ├─supervisor.service 
+             │ ├─[0;38;5;245m   9109 /usr/bin/python3 /usr/bin/supervisord -n -c /etc/supervisor/supervisord.conf[0m
+             │ ├─[0;38;5;245m3814080 /home/eventorro/venv/bin/python3 /home/eventorro/venv/bin/celery -A afiche worker -l info[0m
+             │ └─[0;38;5;245m3814082 /home/eventorro/venv/bin/python3 /home/eventorro/venv/bin/celery -A afiche worker -l info[0m
+             ├─snapd.service 
+             │ └─[0;38;5;245m1949725 /usr/lib/snapd/snapd[0m
+             ├─uuidd.service 
+             │ └─[0;38;5;245m9114 /usr/sbin/uuidd --socket-activation[0m
+             ├─system-postgresql.slice 
+             │ └─postgresql@14-main.service 
+             │   ├─[0;38;5;245m3373612 /usr/lib/postgresql/14/bin/postgres -D /var/lib/postgresql/14/main -c config_file=/etc/postgresql/14/main/postgresql.conf[0m
+             │   ├─[0;38;5;245m3373614 postgres: 14/main: checkpointer[0m
+             │   ├─[0;38;5;245m3373615 postgres: 14/main: background writer[0m
+             │   ├─[0;38;5;245m3373616 postgres: 14/main: walwriter[0m
+             │   ├─[0;38;5;245m3373617 postgres: 14/main: autovacuum launcher[0m
+             │   ├─[0;38;5;245m3373618 postgres: 14/main: stats collector[0m
+             │   └─[0;38;5;245m3373619 postgres: 14/main: logical replication launcher[0m
+             ├─rsyslog.service 
+             │ └─[0;38;5;245m908 /usr/sbin/rsyslogd -n -iNONE[0m
+             ├─qemu-guest-agent.service 
+             │ └─[0;38;5;245m907 /usr/sbin/qemu-ga[0m
+             ├─redis-server.service 
+             │ └─[0;38;5;245m10105 /usr/bin/redis-server 127.0.0.1:6379[0m
+             ├─systemd-resolved.service 
+             │ └─[0;38;5;245m814 /lib/systemd/systemd-resolved[0m
+             ├─dbus.service 
+             │ └─[0;38;5;245m897 @dbus-daemon --system --address=systemd: --nofork --nopidfile --systemd-activation --syslog-only[0m
+             ├─systemd-timesyncd.service 
+             │ └─[0;38;5;245m477 /lib/systemd/systemd-timesyncd[0m
+             ├─system-getty.slice 
+             │ └─getty@tty1.service 
+             │   └─[0;38;5;245m965 /sbin/agetty -o -p -- \u --noclear tty1 linux[0m
+             └─systemd-logind.service 
+               └─[0;38;5;245m912 /lib/systemd/systemd-logind[0m

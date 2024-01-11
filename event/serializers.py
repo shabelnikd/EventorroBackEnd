@@ -32,6 +32,7 @@ class EventListSerializer(serializers.ModelSerializer):
         repr['tickets_number'] = instance.tickets_number
         repr['ticket_users'] = TicketSerializer(instance.tickets, many=True).data
         repr['poster'] = f"{settings.LINK}{instance.get_image_url('poster')}"
+        repr['event_language'] = instance.event_language	
         if instance.event_card_image:
             repr['event_card_image'] = f"{settings.LINK}{instance.get_image_url('event_card_image')}"    
         return repr

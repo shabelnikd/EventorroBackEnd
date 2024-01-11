@@ -29,7 +29,7 @@ ALLOWED_HOSTS = config('ALLOWED_HOSTS').split(',')
 
 DOMAIN=config('DOMAIN')
 LINK=config('LINK')
-
+MAIN_LINK=config('MAIN_PAGE')
 
 # Application definition
 
@@ -145,12 +145,22 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
 
+DATA_UPLOAD_MAX_MEMORY_SIZE = 20971520
+FILE_UPLOAD_MAX_MEMORY_SIZE = 20971520
+
 REST_FRAMEWORK = {
     # 'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     # 'PAGE_SIZE': 6,
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
+    'DEFAULT_PARSER_CLASSES': (
+        'rest_framework.parsers.MultiPartParser',
+        'rest_framework.parsers.FormParser',
+    ),
+    'DATA_UPLOAD_MAX_MEMORY_SIZE': 20971520,
+    'FILE_UPLOAD_MAX_MEMORY_SIZE': 20971520,
+
 }
 
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'

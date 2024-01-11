@@ -1,0 +1,7 @@
+[0m[0;4m [0m[0m[0;4m UNIT                                [0m[0m[0;4m LOAD  [0m[0m[0;4m ACTIVE[0m[0m[0;4m SUB   [0m[0m[0;4m DESCRIPTION                      [0m
+[0;1;31m●[0m[0;1;31m [0m[0;1;31msystemd-networkd-wait-online.service[0m[0;1;31m [0mloaded [0;1;31mfailed[0m[0;1;31m [0m[0;1;31mfailed[0m[0;1;31m [0mWait for Network to be Configured
+
+LOAD   = Reflects whether the unit definition was properly loaded.
+ACTIVE = The high-level unit activation state, i.e. generalization of SUB.
+SUB    = The low-level unit activation state, values depend on unit type.
+1 loaded units listed.

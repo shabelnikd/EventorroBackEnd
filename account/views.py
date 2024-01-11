@@ -12,6 +12,8 @@ from .permissions import IsAuthor
 from django.shortcuts import get_object_or_404, redirect
 from .models import User
 from .tasks import send_reset_email
+from django.conf import settings
+
 
 class RegistrationView(APIView):
     @swagger_auto_schema(request_body=RegisterSerializer())
@@ -28,7 +30,7 @@ class ActivationView(APIView):
         user.activation_code = ''
         user.is_active = True
         user.save()
-        return redirect('http://185.69.154.245/')
+        return redirect(settings.MAIN_LINK)
 
 class LoginView(TokenObtainPairView):
     permission_classes = [AllowAny, ]
