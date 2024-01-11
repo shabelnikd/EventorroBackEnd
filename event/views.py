@@ -231,6 +231,10 @@ class EventViewSet(mixins.RetrieveModelMixin,
         if image5:        
             event.image5 = image5
         event.tickets_number = tickets_number
+<<<<<<< Updated upstream
+=======
+        #if price_from or price_from=='0':
+>>>>>>> Stashed changes
         event.price_from = price_from
         event.price_to = price_to
         if event_card_image:
