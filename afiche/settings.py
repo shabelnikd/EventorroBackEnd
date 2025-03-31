@@ -88,17 +88,25 @@ WSGI_APPLICATION = 'afiche.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': config('DB_ENGINE'),
-        'NAME': config('DB_NAME'),
-        'USER': config('DB_USER'),
-        'PASSWORD': config('DB_PASSWORD'),
-        'HOST': config('DB_HOST'),
-        'PORT': config('DB_PORT', cast=int)
+# DATABASES = {
+#     'default': {
+#         'ENGINE': config('DB_ENGINE'),
+#         'NAME': config('DB_NAME'),
+#         'USER': config('DB_USER'),
+#         'PASSWORD': config('DB_PASSWORD'),
+#         'HOST': config('DB_HOST'),
+#         'PORT': config('DB_PORT', cast=int)
+#
+#     }
+# }
 
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": "db.sqlite3",
     }
 }
+
 
 
 # Password validation
@@ -166,14 +174,6 @@ REST_FRAMEWORK = {
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
 CORS_ALLOWED_ORIGINS = [
-     'http://localhost:3000',
-     'http://localhost:3001', 
-     'http://127.0.0.1:3000',
-     'http://127.0.0.1:3001', 
-     'https://www.thunderclient.com',
-     'http://185.69.154.245',
-     'https://eventorro.com',
-     'http://185.69.154.20',
      'https://www.eventorro.com',
 ]
 
